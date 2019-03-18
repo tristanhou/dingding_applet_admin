@@ -21,8 +21,7 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-        //
+        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
       }
     }
     return config

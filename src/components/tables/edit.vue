@@ -13,49 +13,47 @@
 			<Button @click.stop="canceltEdit" style="padding: 6px 4px;" type="text"><Icon type="md-close"></Icon></Button>
 		</div>
 	</div>
-
 </template>
 <script>
-	export default {
-		name: 'TablesEdit',
-		props: {
-			value: [String, Number],
-			edittingCellId: String,
-			params: Object,
-			editable: Boolean
-		},
-		computed: {
-			isEditting () {
-				return this.edittingCellId === `editting-${this.params.index}-${this.params.column.key}`
-			}
-		},
-		methods: {
-			handleInput (val) {
-				this.$emit('input', val)
-			},
-			startEdit () {
-				this.$emit('on-start-edit', this.params)
-			},
-			saveEdit () {
-				this.$emit('on-save-edit', this.params)
-			},
-			canceltEdit () {
-				this.$emit('on-cancel-edit', this.params)
-			},
-			removeEdit () {
-                this.$Modal.confirm({
-                    title: '你确定要删除吗?',
-                    onOk: () => {
-                        this.$emit('on-remove-edit', this.params)
-                    }
-                });
-			},
-			ok () {
-				this.$emit('input', this.params.tableData.filter((item, index) => index !== this.params.row.initRowIndex))
-				
-			}
-		}
-	}
+export default {
+    name: 'TablesEdit',
+    props: {
+        value: [String, Number],
+        edittingCellId: String,
+        params: Object,
+        editable: Boolean
+    },
+    computed: {
+        isEditting () {
+            return this.edittingCellId === `editting-${this.params.index}-${this.params.column.key}`;
+        }
+    },
+    methods: {
+        handleInput (val) {
+            this.$emit('input', val);
+        },
+        startEdit () {
+            this.$emit('on-start-edit', this.params);
+        },
+        saveEdit () {
+            this.$emit('on-save-edit', this.params);
+        },
+        canceltEdit () {
+            this.$emit('on-cancel-edit', this.params);
+        },
+        removeEdit () {
+            this.$Modal.confirm({
+                title: '你确定要删除吗?',
+                onOk: () => {
+                    this.$emit('on-remove-edit', this.params);
+                }
+            });
+        },
+        ok () {
+            this.$emit('input', this.params.tableData.filter((item, index) => index !== this.params.row.initRowIndex));
+        }
+    }
+};
 </script>
 
 <style lang="less">

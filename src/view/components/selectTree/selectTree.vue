@@ -52,124 +52,124 @@
   </Row>
 </template>
 <script>
-import SelectTree from '_c/select_tree'
-import { getData } from '@/api/data'
+import SelectTree from '_c/select_tree';
+import { getData } from '@/api/data';
 export default {
-  name: 'split_pane_page',
-  components: {
-    SelectTree
-  },
-  data () {
-    return {
-      data: [],
-      columnsProps: [
-        {
-          title: '属性',
-          key: 'props'
+    name: 'split_pane_page',
+    components: {
+        SelectTree
+    },
+    data () {
+        return {
+            data: [],
+            columnsProps: [
+                {
+                    title: '属性',
+                    key: 'props'
+                },
+                {
+                    title: '说明',
+                    key: 'description'
+                },
+                {
+                    title: '类型',
+                    key: 'type'
+                },
+                {
+                    title: '默认值',
+                    key: 'default'
+                }
+            ],
+            dataProps: [
+                {
+                    props: 'isShowChecbox',
+                    description: '是否显示复选框',
+                    type: 'Boolean',
+                    default: 'false'
+                },
+                {
+                    props: 'placeholder',
+                    description: '下拉框占位文本',
+                    type: 'Boolean',
+                    default: '请选择'
+                },
+                {
+                    props: 'width',
+                    description: '下拉框宽度, tree最小宽度',
+                    type: 'Number',
+                    default: '180'
+                },
+                {
+                    props: 'height',
+                    description: 'tree最大高度',
+                    type: 'Number',
+                    default: '600'
+                },
+                {
+                    props: 'dataTree',
+                    description: 'Tree 数据',
+                    type: 'Boolean',
+                    default: '空'
+                }
+            ],
+            columnsEvents: [
+                {
+                    title: '事件名',
+                    key: 'events'
+                },
+                {
+                    title: '说明',
+                    key: 'description'
+                },
+                {
+                    title: '返回值',
+                    key: 'value'
+                }
+            ],
+            dataEvents: [
+                {
+                    events: 'on-select-change',
+                    description: '选择tree某一节点时触发，只在单选时有效',
+                    value: '选中的节点数据'
+                },
+                {
+                    events: 'on-check-change',
+                    description: '选择tree某一节点时触发，只在复选时有效',
+                    value: '选中的节点数据'
+                }
+            ],
+            isShowCheckbox: false,
+            selectedData: null
+        };
+    },
+    methods: {
+        initTreeData () {
+            getData('/proxy/cloud/tree').then(res => {
+                this.formatTreeData(res.data.data);
+                this.data = res.data.data;
+            });
         },
-        {
-          title: '说明',
-          key: 'description'
+        formatTreeData (data) {
+            data.forEach((item) => {
+                item.title = item.name;
+                item.children && this.formatTreeData(item.children);
+            });
         },
-        {
-          title: '类型',
-          key: 'type'
+        openCheckBox () {
+            debugger;
+            this.isShowCheckbox === false ? this.isShowCheckbox = true : this.isShowCheckbox = false;
         },
-        {
-          title: '默认值',
-          key: 'default'
+        onCheckChange (value) {
+            this.selectedData = value;
+        },
+        onSelectChange (value) {
+            this.selectedData = value;
         }
-      ],
-      dataProps: [
-        {
-          props: 'isShowChecbox',
-          description: '是否显示复选框',
-          type: 'Boolean',
-          default: 'false'
-        },
-        {
-          props: 'placeholder',
-          description: '下拉框占位文本',
-          type: 'Boolean',
-          default: '请选择'
-        },
-        {
-          props: 'width',
-          description: '下拉框宽度, tree最小宽度',
-          type: 'Number',
-          default: '180'
-        },
-        {
-          props: 'height',
-          description: 'tree最大高度',
-          type: 'Number',
-          default: '600'
-        },
-        {
-          props: 'dataTree',
-          description: 'Tree 数据',
-          type: 'Boolean',
-          default: '空'
-        }
-      ],
-      columnsEvents: [
-        {
-          title: '事件名',
-          key: 'events'
-        },
-        {
-          title: '说明',
-          key: 'description'
-        },
-        {
-          title: '返回值',
-          key: 'value'
-        }
-      ],
-      dataEvents: [
-        {
-          events: 'on-select-change',
-          description: '选择tree某一节点时触发，只在单选时有效',
-          value: '选中的节点数据'
-        },
-        {
-          events: 'on-check-change',
-          description: '选择tree某一节点时触发，只在复选时有效',
-          value: '选中的节点数据'
-        }
-      ],
-      isShowCheckbox: false,
-      selectedData: null
+    },
+    mounted () {
+        this.initTreeData();
     }
-  },
-  methods: {
-    initTreeData () {
-      getData('/proxy/cloud/tree').then(res => {
-        this.formatTreeData(res.data.data)
-        this.data = res.data.data
-      })
-    },
-    formatTreeData (data) {
-      data.forEach((item) => {
-        item.title = item.name
-        item.children && this.formatTreeData(item.children)
-      })
-    },
-    openCheckBox () {
-      debugger
-      this.isShowCheckbox === false ? this.isShowCheckbox = true : this.isShowCheckbox = false
-    },
-    onCheckChange (value) {
-      this.selectedData = value
-    },
-    onSelectChange (value) {
-      this.selectedData = value
-    }
-  },
-  mounted () {
-    this.initTreeData()
-  }
-}
+};
 </script>
 
 <style lang="less">

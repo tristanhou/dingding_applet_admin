@@ -79,176 +79,173 @@
   </Row>
 </template>
 <script>
-import Tree from '_c/trees'
-import { getData } from '@/api/data'
+import Tree from '_c/trees';
+import { getData } from '@/api/data';
 export default {
-  name: 'home',
-  components: {
-    Tree
-  },
-  data () {
-    return {
-      dataList: [],
-      columnsProps: [
-        {
-          title: '属性',
-          key: 'props'
+    name: 'home',
+    components: {
+        Tree
+    },
+    data () {
+        return {
+            dataList: [],
+            columnsProps: [
+                {
+                    title: '属性',
+                    key: 'props'
+                },
+                {
+                    title: '说明',
+                    key: 'description'
+                },
+                {
+                    title: '类型',
+                    key: 'type'
+                },
+                {
+                    title: '默认值',
+                    key: 'default'
+                }
+            ],
+            dataProps: [
+                {
+                    props: 'isExpandAll',
+                    description: '是否打开文档树所有节点',
+                    type: 'Boolean',
+                    default: 'false'
+                },
+                {
+                    props: 'isCleanAll',
+                    description: '是否清除选中状态',
+                    type: 'Boolean',
+                    default: 'false'
+                },
+                {
+                    props: 'isDisabledItem',
+                    description: '是否禁用掉某一个树节点',
+                    type: 'Boolean',
+                    default: 'false'
+                },
+                {
+                    props: 'isAutoComplete',
+                    description: '是否打开查询搜索框',
+                    type: 'Boolean',
+                    default: 'true'
+                },
+                {
+                    props: 'isShowCheckbox',
+                    description: '是否显示复选框',
+                    type: 'Boolean',
+                    default: 'false'
+                },
+                {
+                    props: 'checkedNode',
+                    description: '需要显示的复选框节点',
+                    type: 'Array',
+                    default: 'false'
+                },
+                {
+                    props: 'removeCheckedNode',
+                    description: '需要删除的复选框节点',
+                    type: 'Array',
+                    default: 'true'
+                },
+                {
+                    props: 'dataTree',
+                    description: 'Tree 数据',
+                    type: 'Boolean',
+                    default: '空'
+                },
+                {
+                    props: 'userId',
+                    description: '传唯一标识符, 选中相应数据',
+                    type: 'Number | String',
+                    default: '空'
+                }
+            ],
+            columnsEvents: [
+                {
+                    title: '事件名',
+                    key: 'events'
+                },
+                {
+                    title: '说明',
+                    key: 'description'
+                },
+                {
+                    title: '返回值',
+                    key: 'value'
+                }
+            ],
+            dataEvents: [
+                {
+                    events: 'auto-complete-change',
+                    description: '搜索框数据改变时触发',
+                    value: '输入值'
+                },
+                {
+                    events: 'has-selected-data',
+                    description: '选中某一个树节点时触发',
+                    value: '  当前的选中节点的id值'
+                }
+            ],
+            value: null,
+            userId: null,
+            isExpandAll: false,
+            isCleanAll: false,
+            isDisabledId: null,
+            isAutoComplete: true,
+            isShowCheckbox: false,
+            checkedNode: null,
+            removeCheckedNode: null
+        };
+    },
+    mounted () {
+        this.initTreeData();
+    },
+    methods: {
+        initTreeData () {
+            getData('/proxy/cloud/tree').then(res => {
+                this.formatTreeData(res.data.data);
+                this.dataList = res.data.data;
+            });
         },
-        {
-          title: '说明',
-          key: 'description'
+        formatTreeData (data) {
+            data.forEach((item) => {
+                item.title = item.name;
+                item.children && this.formatTreeData(item.children);
+            });
         },
-        {
-          title: '类型',
-          key: 'type'
+        openTreeNode () {
+            this.isExpandAll === true ? this.isExpandAll = false : this.isExpandAll = true;
         },
-        {
-          title: '默认值',
-          key: 'default'
+        cleanAllSelected () {
+            this.isCleanAll === true ? this.isCleanAll = false : this.isCleanAll = true;
+        },
+        disabledNode () {
+            this.isDisabledId = 1;
+        },
+        autoComplete () {
+            this.isAutoComplete === true ? this.isAutoComplete = false : this.isAutoComplete = true;
+        },
+        showCheckbox () {
+            this.isShowCheckbox === true ? this.isShowCheckbox = false : this.isShowCheckbox = true;
+        },
+        checkedNodes () {
+            this.checkedNode = this.value;
+        },
+        removeCheckedNodes () {
+            debugger;
+            this.removeCheckedNode = this.value;
+        },
+        showSelectedNode () {
+            this.userId = this.value;
+        },
+        onSelectChange (data) {
+            data.length !== 0 && (this.value = data[0].userId);
         }
-      ],
-      dataProps: [
-        {
-          props: 'isExpandAll',
-          description: '是否打开文档树所有节点',
-          type: 'Boolean',
-          default: 'false'
-        },
-        {
-          props: 'isCleanAll',
-          description: '是否清除选中状态',
-          type: 'Boolean',
-          default: 'false'
-        },
-        {
-          props: 'isDisabledItem',
-          description: '是否禁用掉某一个树节点',
-          type: 'Boolean',
-          default: 'false'
-        },
-        {
-          props: 'isAutoComplete',
-          description: '是否打开查询搜索框',
-          type: 'Boolean',
-          default: 'true'
-        },
-        {
-          props: 'isShowCheckbox',
-          description: '是否显示复选框',
-          type: 'Boolean',
-          default: 'false'
-        },
-        {
-          props: 'checkedNode',
-          description: '需要显示的复选框节点',
-          type: 'Array',
-          default: 'false'
-        },
-        {
-          props: 'removeCheckedNode',
-          description: '需要删除的复选框节点',
-          type: 'Array',
-          default: 'true'
-        },
-        {
-          props: 'dataTree',
-          description: 'Tree 数据',
-          type: 'Boolean',
-          default: '空'
-        },
-        {
-          props: 'userId',
-          description: '传唯一标识符, 选中相应数据',
-          type: 'Number | String',
-          default: '空'
-        }
-      ],
-      columnsEvents: [
-        {
-          title: '事件名',
-          key: 'events'
-        },
-        {
-          title: '说明',
-          key: 'description'
-        },
-        {
-          title: '返回值',
-          key: 'value'
-        }
-      ],
-      dataEvents: [
-        {
-          events: 'auto-complete-change',
-          description: '搜索框数据改变时触发',
-          value: '输入值'
-        },
-        {
-          events: 'has-selected-data',
-          description: '选中某一个树节点时触发',
-          value: '  当前的选中节点的id值'
-        }
-      ],
-      value: null,
-      userId: null,
-      isExpandAll: false,
-      isCleanAll: false,
-      isDisabledId: null,
-      isAutoComplete: true,
-      isShowCheckbox: false,
-      checkedNode: null,
-      removeCheckedNode: null
     }
-  },
-  mounted () {
-    this.initTreeData()
-  },
-  methods: {
-    initTreeData () {
-      getData('/proxy/cloud/tree').then(res => {
-        this.formatTreeData(res.data.data)
-        this.dataList = res.data.data
-      })
-    },
-    formatTreeData (data) {
-      data.forEach((item) => {
-        item.title = item.name
-        item.children && this.formatTreeData(item.children)
-      })
-    },
-    openTreeNode () {
-      this.isExpandAll === true ? this.isExpandAll = false : this.isExpandAll = true
-    },
-    cleanAllSelected () {
-      this.isCleanAll === true ? this.isCleanAll = false : this.isCleanAll = true
-    },
-    disabledNode () {
-      this.isDisabledId = 1
-    },
-    autoComplete () {
-      this.isAutoComplete === true ? this.isAutoComplete = false : this.isAutoComplete = true
-    },
-    showCheckbox () {
-      this.isShowCheckbox === true ? this.isShowCheckbox = false : this.isShowCheckbox = true
-    },
-    checkedNodes () {
-      this.checkedNode = this.value
-    },
-    removeCheckedNodes () {
-      debugger
-      this.removeCheckedNode = this.value
-    },
-    showSelectedNode (data) {
-      this.userId = this.value
-    },
-    onSelectChange (data) {
-      data.length !== 0 && (this.value = data[0].userId)
-    },
-    hasSelectedData () {
-
-    }
-  }
-}
+};
 </script>
 
 <style lang="less">
