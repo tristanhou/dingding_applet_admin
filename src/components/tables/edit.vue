@@ -4,7 +4,7 @@
 			<span class="value-con">{{ value }}</span>
 			<div class="tables-edit-btn" v-if="editable">
 				<Button  @click.stop="startEdit"  style="padding: 2px 4px" type="text"><Icon type="md-create" size="16"></Icon></Button>
-					<Button style="padding: 2px 4px" type="text" @click.stop="removeEdit"><Icon type="ios-trash" size="16"></Icon></Button>
+                <Button style="padding: 2px 4px" type="text" @click.stop="removeEdit"><Icon type="ios-trash" size="16"></Icon></Button>
 			</div>
 		</div>
 		<div v-else class="tables-editting-con">

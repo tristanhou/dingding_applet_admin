@@ -1,4 +1,4 @@
-import Main from '@/components/main'
+import Main from '@/components/main';
 // import parentView from '@/components/parent-view'
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -16,118 +16,118 @@ import Main from '@/components/main'
  * }
  */
 export default [
-  {
-    path: '/login',
-    name: 'login',
-    meta: {
-      title: 'Login - 登录',
-      hideInMenu: true
+    {
+        path: '/login',
+        name: 'login',
+        meta: {
+            title: 'Login - 登录',
+            hideInMenu: true
+        },
+        component: () => import('@/view/login/login.vue')
     },
-    component: () => import('@/view/login/login.vue')
-  },
-  {
-    path: '/',
-    name: 'home',
-    redirect: 'home',
-    component: Main,
-    meta: {
-      hideInMenu: false,
-      notCache: true
-    },
-    children: [
-      {
-        path: '/home',
+    {
+        path: '/',
         name: 'home',
+        redirect: 'home',
+        component: Main,
         meta: {
-          hideInMenu: false,
-          title: '首页',
-          notCache: true,
-          icon: 'md-home'
+            hideInMenu: false,
+            notCache: true
         },
-        component: () => import('@/view/single-page/home')
-      }
-    ]
-  },
-  {
-    path: '/message',
-    name: 'message',
-    component: Main,
-    meta: {
-      hideInBread: true,
-      hideInMenu: true
+        children: [
+            {
+                path: '/home',
+                name: 'home',
+                meta: {
+                    hideInMenu: false,
+                    title: '首页',
+                    notCache: true,
+                    icon: 'md-home'
+                },
+                component: () => import('@/view/single-page/home')
+            }
+        ]
     },
-    children: [
-      {
-        path: 'message_page',
-        name: 'message_page',
+    {
+        path: '/message',
+        name: 'message',
+        component: Main,
         meta: {
-          icon: 'md-notifications',
-          title: '消息中心'
+            hideInBread: true,
+            hideInMenu: true
         },
-        component: () => import('@/view/single-page/message/index.vue')
-      }
-    ]
-  },
-  {
-    path: '/components',
-    name: 'components',
-    meta: {
-      icon: 'logo-buffer',
-      title: '组件'
+        children: [
+            {
+                path: 'message_page',
+                name: 'message_page',
+                meta: {
+                    icon: 'md-notifications',
+                    title: '消息中心'
+                },
+                component: () => import('@/view/single-page/message/index.vue')
+            }
+        ]
     },
-    component: Main,
-    children: [
-      {
-        path: 'selectTree',
-        name: 'selectTree',
+    {
+        path: '/components',
+        name: 'components',
         meta: {
-          icon: 'ios-infinite',
-          title: '树状下拉菜单'
+            icon: 'logo-buffer',
+            title: '组件'
         },
-        component: () => import('@/view/components/selectTree/selectTree.vue')
-      },
-      {
-        path: 'trees',
-        name: 'trees',
+        component: Main,
+        children: [
+            {
+                path: 'selectTree',
+                name: 'selectTree',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: '树状下拉菜单'
+                },
+                component: () => import('@/view/components/selectTree/selectTree.vue')
+            },
+            {
+                path: 'trees',
+                name: 'trees',
+                meta: {
+                    icon: 'md-git-branch',
+                    title: '组织树'
+                },
+                component: () => import('@/view/components/trees/trees.vue')
+            },
+            {
+                path: 'tables',
+                name: 'tables',
+                meta: {
+                    icon: 'md-git-branch',
+                    title: '功能表格'
+                },
+                component: () => import('@/view/components/tables/table.vue')
+            }
+        ]
+    },
+    {
+        path: '/401',
+        name: 'error_401',
         meta: {
-          icon: 'md-git-branch',
-          title: '组织树'
+            hideInMenu: true
         },
-        component: () => import('@/view/components/trees/trees.vue')
-      },
-      {
-        path: 'tables',
-        name: 'tables',
+        component: () => import('@/view/error-page/401.vue')
+    },
+    {
+        path: '/500',
+        name: 'error_500',
         meta: {
-          icon: 'md-git-branch',
-          title: '功能表格'
+            hideInMenu: true
         },
-        component: () => import('@/view/components/tables/tables.vue')
-      }
-    ]
-  },
-  {
-    path: '/401',
-    name: 'error_401',
-    meta: {
-      hideInMenu: true
+        component: () => import('@/view/error-page/500.vue')
     },
-    component: () => import('@/view/error-page/401.vue')
-  },
-  {
-    path: '/500',
-    name: 'error_500',
-    meta: {
-      hideInMenu: true
-    },
-    component: () => import('@/view/error-page/500.vue')
-  },
-  {
-    path: '*',
-    name: 'error_404',
-    meta: {
-      hideInMenu: true
-    },
-    component: () => import('@/view/error-page/404.vue')
-  }
-]
+    {
+        path: '*',
+        name: 'error_404',
+        meta: {
+            hideInMenu: true
+        },
+        component: () => import('@/view/error-page/404.vue')
+    }
+];

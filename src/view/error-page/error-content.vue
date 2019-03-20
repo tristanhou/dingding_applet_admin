@@ -12,17 +12,17 @@
 </template>
 
 <script>
-import './error.less'
-import backBtnGroup from './back-btn-group.vue'
+import './error.less';
+import backBtnGroup from './back-btn-group.vue';
 export default {
-  name: 'error_content',
-  components: {
-    backBtnGroup
-  },
-  props: {
-    code: String,
-    desc: String,
-    src: String
-  }
-}
+    name: 'error_content',
+    components: {
+        backBtnGroup
+    },
+    props: {
+        code: String,
+        desc: String,
+        src: String
+    }
+};
 </script>

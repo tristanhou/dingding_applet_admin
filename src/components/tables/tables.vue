@@ -194,7 +194,7 @@ export default {
                         },
                         'on-remove-edit': (params) => {
                             this.$emit('on-remove-edit', params);
-                            // this.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex))
+                            this.$emit('input', params.tableData.filter((item, index) => index !== params.row.initRowIndex));
                         }
                     }
                 });
@@ -235,6 +235,15 @@ export default {
             this.insideTableData = this.value.map((item, index) => {
                 let res = item;
                 res.initRowIndex = index;
+                this.columns.forEach(v => {
+                    if (v.enum) {
+                        v.enum.forEach(d => {
+                            if (Number(item[v.key]) === Number(Object.keys(d)[0])) {
+                                item[v.key] = Object.values(d)[0];
+                            }
+                        });
+                    }
+                });
                 return res;
             });
         },
@@ -288,11 +297,14 @@ export default {
         columns (columns) {
             this.handleColumns(columns);
             this.setDefaultSearchKey();
+           
         },
         value () {
+            debugger;
             this.handleTableData();
             if (this.searchable) this.handleSearch();
-        }
+        },
+        deep:true
     },
     mounted () {
         this.handleColumns(this.columns);

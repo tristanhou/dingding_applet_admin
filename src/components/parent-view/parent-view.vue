@@ -5,16 +5,16 @@
 </template>
 <script>
 export default {
-  name: 'ParentView',
-  data () {
-    return {
-      cacheChaildName: ''
+    name: 'ParentView',
+    data () {
+        return {
+            cacheChaildName: ''
+        };
+    },
+    computed: {
+        notCacheName () {
+            return this.$route.meta && this.$route.meta.notCache ? this.$route.name : '';
+        }
     }
-  },
-  computed: {
-    notCacheName () {
-      return (this.$route.meta && this.$route.meta.notCache) ? this.$route.name : ''
-    }
-  }
-}
+};
 </script>
