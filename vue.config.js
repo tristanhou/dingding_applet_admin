@@ -39,6 +39,8 @@ module.exports = {
 
     // 通过反向代理来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
     devServer: {
+        host: '0.0.0.0',
+        port: 8080,
         proxy: {
             '/proxy/*': {
                 // target: 'http://172.16.0.118:8889',
