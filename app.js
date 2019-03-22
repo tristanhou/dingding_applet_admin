@@ -33,7 +33,7 @@ let server = http.createServer((request, response)=> {
     extName = path.extname(extName);
     extName = extName ? extName.slice(1) : 'unknown';
 
-    if(/\/api\/.*$/.test(pathName)){
+    if(/\/proxy\/.*$/.test(pathName)){
         proxy.web(request, response);
         return;
     }

@@ -35,7 +35,7 @@
           <Button icon="md-add" @click="showCheckbox" style="margin-left: 10px">打开多选</Button>
           <Button icon="md-add" @click="removeCheckedNodes" style="margin-left: 10px">取消多选</Button>
         </div>
-        <Input v-model="value" style="width: 300px;margin-top: 10px" readonly/>
+        <Input v-model="value" style="width: 300px;margin-top: 10px" v-focus/>
         <pre class="bg-pre">
           &lt;Tree <br/>
           &nbsp;&nbsp;:dataTree="dataList"<br/>
