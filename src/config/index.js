@@ -31,6 +31,9 @@ export default {
 
         'loading': {
             type: 'loading-one'
+        },
+        'message': {
+            animation: ''
         }
     }
 };
