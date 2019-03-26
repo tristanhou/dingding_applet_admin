@@ -14,10 +14,14 @@ import '@/assets/icons/iconfont.css';
 import TreeTable from 'tree-table-vue';
 import http from '@/api/http';
 import api from '@/api/api';
+import Cookies from 'js-cookie';
+import Utils from './libs/utils';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 // 实际打包时应该不引入mock
 /* eslint-disable */
 if (process.env.NODE_ENV !== 'production') require('@/mock')
-
+Vue.use(ElementUI);
 Vue.use(iView, {
   i18n: (key, value) => i18n.t(key, value)
 })
@@ -36,6 +40,8 @@ Vue.config.productionTip = false
 Vue.prototype.$config = config
 Vue.prototype.$http = http
 Vue.prototype.$api = api;
+Vue.prototype.$cookie = Cookies;
+Vue.prototype.$utils = Utils;
 /**
  * 注册指令
  */

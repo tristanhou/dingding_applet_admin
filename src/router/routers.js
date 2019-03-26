@@ -103,6 +103,46 @@ export default [
                     title: '功能表格'
                 },
                 component: () => import('@/view/components/tables/table.vue')
+            },
+            // lofin-from组件
+            {
+                path:'login_form',
+                name:'login_form',
+                meta:{
+                    icon: 'md-git-branch',
+                    title: '登录表单'
+                },
+                component:resolve => require(['@/view/components/login/login.vue'],resolve)
+            },
+            // imei搜索组件
+            {
+                path:'search',
+                name:'search',
+                meta:{
+                    icon: 'md-git-branch',
+                    title: 'IMEI搜索'
+                },
+                component:resolve => require(['@/view/components/search/search.vue'],resolve)
+            },
+            // 树表可懒加载组件
+            {
+                path:'tree_table',
+                name:'tree_table',
+                meta:{
+                    icon: 'md-git-branch',
+                    title: '树表格'
+                },
+                component:resolve => require(['@/view/components/treeTable/treeTable.vue'],resolve)
+            },
+            // 懒加载树
+            {
+                path:'load_tree',
+                name:'load_tree',
+                meta:{
+                    icon: 'md-git-branch',
+                    title: '树表格'
+                },
+                component:resolve => require(['@/view/components/loadTree/loadTree.vue'],resolve)
             }
         ]
     },
@@ -129,5 +169,5 @@ export default [
             hideInMenu: true
         },
         component: () => import('@/view/error-page/404.vue')
-    }
+    },
 ];

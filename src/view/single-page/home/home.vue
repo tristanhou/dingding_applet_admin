@@ -8,7 +8,7 @@
         </p>
         <h1>软件简介</h1>
         <pre class="bg-pre">
-          vue + vue-router + vuex + axios + iview3.0
+          vue + vue-router + vuex + axios + iview3.0 + element-ui2.6.3
         </pre>
         <h1>Install</h1>
         <pre class="bg-pre">

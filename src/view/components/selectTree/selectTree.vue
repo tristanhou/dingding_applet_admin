@@ -156,7 +156,6 @@ export default {
             });
         },
         openCheckBox () {
-            debugger;
             this.isShowCheckbox === false ? this.isShowCheckbox = true : this.isShowCheckbox = false;
         },
         onCheckChange (value) {

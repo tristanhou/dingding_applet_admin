@@ -34,7 +34,7 @@
 </template>
 <script>
 import Tables from '_c/tables';
-import { getData } from '@/api/data';
+// import { getData } from '@/api/data';
 export default {
     name: 'home',
     components: {
@@ -196,7 +196,6 @@ export default {
             )[0];
         },
         removeData(params) {
-            debugger;
             this.tableData.filter((item, index) => index !== params.row.initRowIndex);
         },
         initTableData() {
