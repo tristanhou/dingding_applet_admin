@@ -24,17 +24,17 @@ npm run build
 ```
 #### 组件集成
 
-- 组件路径统一存放路径 `./src/components`
+- 组件统一存放路径 `./src/components`
  
 - 组件命名统一使用中划线 `-` 连接，例： `login-form`
  
 - 组件导出统一通过 `index.js` 文件导出 ，例如 `login-form` 组件：
 
-
+```
 |-- login-form
     |-- index.js
     |-- login-form.vue
-
+```
 ```
 // index.js
 import LoginForm from './login-form.vue';
@@ -46,20 +46,88 @@ export default LoginForm;
 
 - 文使用文档规范与 `iview` 文档一致，包括 组件使用示例、 组件代码示例、组件使用文档
 
+#### 插件集成
+
+如果需要集成插件，首先需要在路径 `./src/config` 全局配置文件中传配置对象给 `plugin`，如下：
+
+```
+/**
+* 
+* key: 'loading' 表示需要加载的插件名称
+* value: '{type: 'loading-one'}' 表示插件的配置参数
+*/
+plugin: {
+    'loading': {
+        type: 'loading-one'
+    }
+}
+```
+- 插件统一存放路径 `./src/plugin`
+
+- 插件导出统一通过 index.js 文件导出 ，例如 loading 组件：
+```
+    |-- loading
+        |-- index.js
+        |-- loading.vue
+ ```
+ ```
+ // index.js
+import loadingComponent from './loading.vue';
+export default {
+    // install 是默认的方法。当外界在 use 这个插件的时候，就会调用本身的 install 方法，同时传一个 Vue 这个类的参数。
+    install: function (Vue, options) {
+        const loadingPlugin = Vue.extend(loadingComponent);
+        const instance = new loadingPlugin({
+            el: document.createElement('div')
+        });
+        instance.type = options.type;
+        let loading = {
+            /**
+             * @method show 打开加载框
+             * @param {*} el 加载框父容器，默认body
+             */
+            show (el) {
+                let dom = el ? el : document.body;
+                instance.show = true;
+                dom.appendChild(instance.$el);
+            },
+            // 隐藏加载框
+            hide () {
+                instance.show = false;
+            },
+        };
+        Vue.prototype.$loading = loading;
+    }
+};
+```
+- 全局配置文件(./src/config.js) 中需要加载的所有插件，全部通过`./src/plugin/index.js` 文件导出
+
+```
+// index.js
+import config from '@/config';
+const { plugin } = config;
+
+export default (Vue) => {
+    for (let name in plugin) {
+        const value = plugin[name];
+        Vue.use(require(`./${name}`).default, typeof value === 'object' ? value : undefined);
+    }
+};
+```
 #### 多语言
-如果需要使用多语言，需要在 `./src/config` 文件设置 `useI18n: true`，多语言配置模块路径 `./src/local` 具体配置写法参考 `vue-i18n 6.x+`，比如设置菜单 -> **首页** 为中英文显示，需要在不同语言包做以下配置：
+如果需要使用多语言，首先需要在路径 `./src/config` 全局配置文件中设置 `useI18n: true`，多语言配置模块路径 `./src/local` 具体配置写法参考 `vue-i18n 6.x+`，比如设置菜单 -> **首页** 为中英文显示，需要在不同语言包做以下配置：
 
 - 中文语言包路径 `./src/local/zh-CN.js` 导出配置文件：，
 ```
 export default {
-    home: '首页'
+        home: '首页'
 };
 ```
 
 - 英文语言包路径 `./src/local/en-US.js` 导出配置文件：
 ```
 export default {
-    home: 'Home'
+        home: 'Home'
 };
 ```
 - `this.$t('home')` 调用 i18n 全局方法 `$t()` 可以实现多语言配置
