@@ -22,9 +22,70 @@ npm run dev
 ```
 npm run build
 ```
-#### 国际化
+#### 组件集成
+
+- 组件路径统一存放路径 `./src/components`
+ 
+- 组件命名统一使用中划线 `-` 连接，例： `login-form`
+ 
+- 组件导出统一通过 `index.js` 文件导出 ，例如 `login-form` 组件：
+
+
+|-- login-form
+    |-- index.js
+    |-- login-form.vue
+
+```
+// index.js
+import LoginForm from './login-form.vue';
+export default LoginForm;
+```
+#### 组件使用文档
+
+- 路径 `./src/view/components`
+
+- 文使用文档规范与 `iview` 文档一致，包括 组件使用示例、 组件代码示例、组件使用文档
+
+#### 多语言
+如果需要使用多语言，需要在 `./src/config` 文件设置 `useI18n: true`，多语言配置模块路径 `./src/local` 具体配置写法参考 `vue-i18n 6.x+`，比如设置菜单 -> **首页** 为中英文显示，需要在不同语言包做以下配置：
+
+- 中文语言包路径 `./src/local/zh-CN.js` 导出配置文件：，
+```
+export default {
+    home: '首页'
+};
+```
+
+- 英文语言包路径 `./src/local/en-US.js` 导出配置文件：
+```
+export default {
+    home: 'Home'
+};
+```
+- `this.$t('home')` 调用 i18n 全局方法 `$t()` 可以实现多语言配置
+
+
 
 #### 自定义图标
+如果需要使用自定义字体图标，以 阿里巴巴矢量图标库 `iconfont` 为例：
+
+- 引入路径 `./src/assets/icons`
+
+- 目录结构
+
+|-- icons
+    |-- demo.css
+    |-- demo_index.html
+    |-- iconfont.css
+    |-- iconfont.eot
+    |-- iconfont.js
+    |-- iconfont.svg
+    |-- iconfont.ttf
+    |-- iconfont.woff
+    |-- iconfont.woff2
+ - vue 'main.js' 全局引入 'import './assets/icons/iconfont.css';'
+ - 通过 `i` 标签使用
+ `<i class="iconfont icon-guiji-zonglan"></i>`
 
 #### 目录
 |-- cloud
