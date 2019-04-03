@@ -14,38 +14,35 @@ import '@/assets/icons/iconfont.css';
 import TreeTable from 'tree-table-vue';
 import http from '@/api/http';
 import api from '@/api/api';
-// 实际打包时应该不引入mock
-/* eslint-disable */
-if (process.env.NODE_ENV !== 'production') require('@/mock')
 
 Vue.use(iView, {
-  i18n: (key, value) => i18n.t(key, value)
-})
-Vue.use(TreeTable)
+    i18n: (key, value) => i18n.t(key, value)
+});
+Vue.use(TreeTable);
 /**
  * @description 注册admin内置插件
  */
-installPlugin(Vue)
+installPlugin(Vue);
 /**
  * @description 生产环境关掉提示
  */
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 /**
  * @description 全局注册应用配置
  */
-Vue.prototype.$config = config
-Vue.prototype.$http = http
+Vue.prototype.$config = config;
+Vue.prototype.$http = http;
 Vue.prototype.$api = api;
 /**
  * 注册指令
  */
-importDirective(Vue)
+importDirective(Vue);
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  router,
-  i18n,
-  store,
-  render: h => h(App)
-})
+    el: '#app',
+    router,
+    i18n,
+    store,
+    render: h => h(App)
+});
