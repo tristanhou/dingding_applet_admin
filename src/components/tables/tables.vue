@@ -300,7 +300,6 @@ export default {
            
         },
         value () {
-            debugger;
             this.handleTableData();
             if (this.searchable) this.handleSearch();
         },

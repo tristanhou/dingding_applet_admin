@@ -93,7 +93,6 @@ export default {
         };
     },
     mounted () {
-        debugger;
         this.travelData(this.dataTree);
     },
     methods: {
@@ -116,7 +115,6 @@ export default {
                     this.$set(item, 'selected', false);
                 }
                 if(item.userId == userId) {
-                    debugger;
                     this.findPids(this.sets, userId);
                     this.upLispTree(this.dataTree, userId);
                     this.$set(item, 'selected', true);
@@ -233,7 +231,6 @@ export default {
             this.checkedNodes(this.dataTree, val);
         },
         removeCheckedNode: function (val) {
-            debugger;
             this.removeCheckedNodes(this.dataTree, val);
     
         },

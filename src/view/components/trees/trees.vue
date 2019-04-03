@@ -235,7 +235,6 @@ export default {
             this.checkedNode = this.value;
         },
         removeCheckedNodes () {
-            debugger;
             this.removeCheckedNode = this.value;
         },
         showSelectedNode () {
