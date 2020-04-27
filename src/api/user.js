@@ -1,5 +1,7 @@
 import axios from '@/libs/api.request';
 import qs from 'qs';
+// import { promises } from 'fs';
+// import { resolve } from 'dns';
 
 export const login = ({ username, password }) => {
     const data = {
@@ -7,20 +9,23 @@ export const login = ({ username, password }) => {
         password
     };
     return axios.request({
-        url: '/proxy/cloud/login',
+        url: '/proxy/attendance/login/login',
         data: qs.stringify(data),
         method: 'post'
     });
 };
 
 export const getUserInfo = (token) => {
-    return axios.request({
-        url: '/proxy/cloud/info',
-        params: {
-            token
-        },
-        method: 'get'
+    return new Promise((resolve, reject) => {
+        resolve({data: {access:  ['super_admin', 'admin']}});
     });
+    // return axios.request({
+    //     url: '/proxy/cloud/info',
+    //     params: {
+    //         token
+    //     },
+    //     method: 'get'
+    // });
 };
 
 export const logout = (token) => {

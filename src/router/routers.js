@@ -69,6 +69,102 @@ export default [
         ]
     },
     {
+        path: '/config',
+        name: 'config',
+        meta: {
+            icon: 'logo-buffer',
+            title: '配置管理',
+          
+        },
+        component: Main,
+        children: [
+            {
+                path: 'configPdt',
+                name: 'configPdt',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: 'PDT配置'
+                },
+                component: () => import('@/view/config/configPdt/configPdt.vue')
+            },
+            {
+                path: 'configProjectManager',
+                name: 'configProjectManager',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: '项目经理配置'
+                },
+                component: () => import('@/view/config/configProjectManager/configProjectManager.vue')
+            },
+            {
+                path: 'configProject',
+                name: 'configProject',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: '项目配置'
+                },
+                component: () => import('@/view/config/configProject/configProject.vue')
+            },            
+        ]
+    },
+    {
+        path: '/statistics',
+        name: 'statistics',
+        meta: {
+            icon: 'logo-buffer',
+            title: '报表统计',
+          
+        },
+        component: Main,
+        children: [
+            {
+                path: 'detailReport',
+                name: 'detailReport',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: '明细表'
+                },
+                component: () => import('@/view/statistics/detail/detailReport.vue')
+            },
+            {
+                path: 'postReport',
+                name: 'postReport',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: '岗位汇总表'
+                },
+                component: () => import('@/view/statistics/post/postReport.vue')
+            },
+            {
+                path: 'projectReport',
+                name: 'projectReport',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: '项目汇总表'
+                },
+                component: () => import('@/view/statistics/project/projectReport.vue')
+            },
+            {
+                path: 'pdtReport',
+                name: 'pdtReport',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: 'PDT汇总表'
+                },
+                component: () => import('@/view/statistics/pdt/pdtReport.vue')
+            },
+            {
+                path: 'financeReport',
+                name: 'financeReport',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: '财务统计表'
+                },
+                component: () => import('@/view/statistics/finance/financeReport.vue')
+            },          
+        ]
+    },
+    {
         path: '/components',
         name: 'components',
         meta: {

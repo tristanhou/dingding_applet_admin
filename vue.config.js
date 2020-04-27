@@ -28,7 +28,7 @@ module.exports = {
     // tweak internal webpack configuration.
     // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
     // 如果你不需要使用eslint，把lintOnSave设为false即可
-    lintOnSave: true,
+    lintOnSave: false,
     chainWebpack: config => {
         config.resolve.alias
             .set('@', resolve('src')) // key,value自行定义，比如.set('@@', resolve('src/components'))
@@ -40,11 +40,12 @@ module.exports = {
     // 通过反向代理来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
     devServer: {
         host: '0.0.0.0',
-        port: 8080,
+        port: 8088,
         proxy: {
             '/proxy/*': {
-                // target: 'http://172.16.0.118:8889',
-                target: 'https://www.easy-mock.com/mock/5bce871a98c3e07240b7e07e/jimilbs',
+                target: 'http://10.0.20.20:8080/',
+                // target: 'http://10.0.16.241:9999/', // 本地ip
+                // target: 'https://www.easy-mock.com/mock/5bce871a98c3e07240b7e07e/jimilbs',
                 changeOrigin: true,
                 pathRewrite: {
                     '^/proxy': ''

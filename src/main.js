@@ -14,18 +14,14 @@ import '@/assets/icons/iconfont.css';
 import TreeTable from 'tree-table-vue';
 import http from '@/api/http';
 import api from '@/api/api';
-<<<<<<< HEAD
-
-=======
 import Cookies from 'js-cookie';
 import Utils from './libs/utils';
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+// import ElementUI from 'element-ui';
+// import 'element-ui/lib/theme-chalk/index.css';
 // 实际打包时应该不引入mock
 /* eslint-disable */
 if (process.env.NODE_ENV !== 'production') require('@/mock')
-Vue.use(ElementUI);
->>>>>>> fcd4c1397816c558ed66f8465462cc14b8fc4ac9
+// Vue.use(ElementUI);
 Vue.use(iView, {
     i18n: (key, value) => i18n.t(key, value)
 });

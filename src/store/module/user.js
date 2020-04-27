@@ -82,7 +82,8 @@ export default {
                     password
                 }).then(res => {
                     const data = res.data;
-                    commit('setToken', data.token);
+                    debugger
+                    commit('setToken', data);
                     resolve();
                 }).catch(err => {
                     reject(err);
@@ -110,6 +111,7 @@ export default {
             return new Promise((resolve, reject) => {
                 try {
                     getUserInfo(state.token).then(res => {
+                        debugger
                         const data = res.data;
                         // commit('setAvator', data.avator)
                         // commit('setUserName', data.name)

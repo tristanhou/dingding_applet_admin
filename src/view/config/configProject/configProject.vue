@@ -1,33 +1,21 @@
 <template>
   <div>
+    <Row type="flex" justity="end" class="butto-box">
+        <Button type="primary">新增</Button>
+    </Row>  
     <Row type="flex" justify="start" :gutter="20">
-      <Col span="20">
+      <Col span="24">
         <Tables
           ref="tables"
           border
           editable
           v-model="tableData"
           :columns="columns"
-          :height="440"
+          :height="680"
           @on-delete="removeData"
           @on-down-record="downRecord"
           @on-up-record="upRecord"
         />
-      </Col>
-    </Row>
-    <Row type="flex" justify="start" :gutter="20">
-      <Col span="20">
-        <Card>
-            <p slot="title">
-                <Icon type="android-contact"></Icon>使用文档
-            </p>
-            <p>table props</p>
-            <Table stripe :columns="columnsProps" :data="dataProps"></Table>
-            <p style="margin-top: 20px">columns events</p>
-            <Table stripe :columns="columnsProps" :data="dataCol"></Table>            
-            <p style="margin-top: 20px">table events</p>
-            <Table stripe :columns="columnsEvents" :data="dataEvents"></Table>
-        </Card>
       </Col>
     </Row>
   </div>
@@ -50,25 +38,57 @@ export default {
                     width: 60,
                     align: 'center'
                 },
-                { title: '姓名', key: 'name', sortable: true },
-                { title: '电话', key: 'phone', editable: true },
-                { title: '邮箱', key: 'email' },
-                {
-                    title: '删除',
-                    key: 'handle',
-                    options: ['delete']
+                { title: 'pdt', key: 'pdt', sortable: true },
+                { title: 'pdt经理', key: 'pdtManager', editable: true },
+               {
+          title: "操作",
+          align: 'center',
+          width: 260,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small',
                 },
-                {
-                    title: '上下移',
-                    key: 'handle',
-                    options: ['change']
+                style: {
+                  marginRight: '5px'
                 },
-                {
-                    title: '性别',
-                    key: 'sex',
-                    enum: [{ 0: '男' }, { 1: '女' }]
+                on: {
+                  click: () => {
+                    this.editSchedule(params)
+                  }
                 }
-            ],
+            }, '修改'),
+            h('Button', {
+              props: {
+                type: 'error',
+                size: 'small'
+              },
+              style: {
+                marginRight: '5px'
+              },
+              on: {
+                click: () => {
+                    this.removeCustomer(params)
+                }
+              }
+            }, '删除'),
+            h('Button', {
+              props: {
+                type: 'default',
+                size: 'small'
+              },
+              on: {
+                click: () => {
+                    this.submitSchedule(params)
+                }
+              }
+            }, '课程表')
+            ]);
+          }
+        }
+                ],
             columnsProps: [
                 {
                     title: '属性',
@@ -179,6 +199,9 @@ export default {
         this.initTableData();
     },
     methods: {
+        show(index) {
+            alert(index)
+        },
     // 下移
         downRecord(val) {
             this.tableData[val.index] = this.tableData.splice(
@@ -200,8 +223,9 @@ export default {
         },
         initTableData() {
             // this.$loading.show();
-            this.$http.get(this.$api.GET_TABLE_LIST).then(res => {
-                this.tableData = res.data.data;
+            this.$http.get(this.$api.GET_CONFIGPDT_LIST).then(res => {
+                debugger
+                this.tableData = res.data;
                 this.$loading.hide();
             });
         }
@@ -210,7 +234,15 @@ export default {
 </script>
 
 <style lang="less">
+
 .count-style {
   font-size: 50px;
+}
+
+.butto-box {
+    justify-content: flex-end;
+    button {
+        margin-left: 10px
+    }
 }
 </style>

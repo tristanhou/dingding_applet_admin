@@ -34,7 +34,7 @@
 					<Page :page-size-opts="[10,20,50]":total="totalPage" :current="current" @on-change="onChange" @on-page-size-change="onPageSizeChange" show-total show-elevator show-sizer :page-size="20"></Page>
 				</div>
 			</slot>
-			<slot name="loading" slot="loading"></slot>
+			<!-- <slot name="loading" slot="loading"></slot> -->
 		</Table>
 	</div>
 </template>

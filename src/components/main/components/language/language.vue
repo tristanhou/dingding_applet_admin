@@ -34,6 +34,7 @@ export default {
     },
     watch: {
         lang (lang) {
+            debugger
             this.$i18n.locale = lang;
         }
     },

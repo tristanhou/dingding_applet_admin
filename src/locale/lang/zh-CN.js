@@ -1,15 +1,21 @@
 export default {
     home: '首页',
     components: '组件',
+    config: '配置管理',
+    configPdt: 'pdt配置',
+    configProjectManager: '项目经理配置',
+    configProject: '项目配置',
     trees: '组织树',
     selectTree: '树状下拉菜单',
-<<<<<<< HEAD
-    tables: '表格'
-=======
     tables: '表格',
-    login_form:'登录表单',
-    search:'IMEI搜索',
-    tree_table:'树表格',
-    load_tree:'懒加载树'
->>>>>>> fcd4c1397816c558ed66f8465462cc14b8fc4ac9
+    login_form: '登录表单',
+    search: 'IMEI搜索',
+    tree_table: '树表格',
+    load_tree: '懒加载树',
+    statistics: '报表统计',
+    detailReport: '明细表',
+    postReport: '岗位汇总表',
+    projectReport: '项目汇总表',
+    pdtReport: 'PDT汇总表',
+    financeReport: '财务统计表',
 };

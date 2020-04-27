@@ -1,12 +1,13 @@
 import axios from '@/libs/api.request';
 import qs from 'qs';
 
-export const getTableData = () => {
+export const getTableData = (url, data) => {
     return axios.request({
-        url: 'get_table_data',
-        method: 'get'
-    });
-};
+      url: url,
+      method: 'get',
+      params: data
+    })
+  }
 
 export const getDragList = () => {
     return axios.request({
@@ -21,6 +22,13 @@ export const errorReq = () => {
         method: 'post'
     });
 };
+export const changeData = (url, data) => {
+    return axios.request({
+      url: url,
+      method: 'post',
+      data: qs.stringify(data)
+    })
+}
 
 export const saveErrorLogger = info => {
     return axios.request({

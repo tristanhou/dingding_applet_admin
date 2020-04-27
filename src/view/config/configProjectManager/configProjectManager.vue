@@ -1,33 +1,21 @@
 <template>
   <div>
+    <Row type="flex" justity="end" class="butto-box">
+        <Button type="primary">新增</Button>
+    </Row>  
     <Row type="flex" justify="start" :gutter="20">
-      <Col span="20">
+      <Col span="24">
         <Tables
           ref="tables"
           border
           editable
           v-model="tableData"
           :columns="columns"
-          :height="440"
+          :height="680"
           @on-delete="removeData"
           @on-down-record="downRecord"
           @on-up-record="upRecord"
         />
-      </Col>
-    </Row>
-    <Row type="flex" justify="start" :gutter="20">
-      <Col span="20">
-        <Card>
-            <p slot="title">
-                <Icon type="android-contact"></Icon>使用文档
-            </p>
-            <p>table props</p>
-            <Table stripe :columns="columnsProps" :data="dataProps"></Table>
-            <p style="margin-top: 20px">columns events</p>
-            <Table stripe :columns="columnsProps" :data="dataCol"></Table>            
-            <p style="margin-top: 20px">table events</p>
-            <Table stripe :columns="columnsEvents" :data="dataEvents"></Table>
-        </Card>
       </Col>
     </Row>
   </div>
@@ -53,6 +41,15 @@ export default {
                 { title: '姓名', key: 'name', sortable: true },
                 { title: '电话', key: 'phone', editable: true },
                 { title: '邮箱', key: 'email' },
+                {
+                    title: '操作',
+                    key: 'action',
+                    fixed: 'right',
+                    width: 120,
+                    render () {
+                        return `<i-button type="text" size="small">查看</i-button><i-button type="text" size="small">编辑</i-button>`;
+                    }
+                },
                 {
                     title: '删除',
                     key: 'handle',
@@ -200,7 +197,7 @@ export default {
         },
         initTableData() {
             // this.$loading.show();
-            this.$http.get(this.$api.GET_TABLE_LIST).then(res => {
+            this.$http.get(this.$api.GET_CONFIGPDT_LIST).then(res => {
                 this.tableData = res.data.data;
                 this.$loading.hide();
             });
@@ -210,7 +207,15 @@ export default {
 </script>
 
 <style lang="less">
+
 .count-style {
   font-size: 50px;
+}
+
+.butto-box {
+    justify-content: flex-end;
+    button {
+        margin-left: 10px
+    }
 }
 </style>
