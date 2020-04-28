@@ -16,14 +16,14 @@
       transfer
       :mask-closable="false">
         <Form :model="formItem" :label-width="100" :rules="ruleValidate" ref="formValidate">
-          <FormItem label="PDT" prop="className">
-              <Input v-model="formItem.pdtName" placeholder="PDT名称"></Input>
+          <FormItem label="项目名称" prop="className">
+              <Input v-model="formItem.projectName" placeholder="项目名称"></Input>
           </FormItem>
           <FormItem label="Desc" prop="classTeacher">
-            <Input v-model="formItem.pdtDesc" placeholder="请输入pdtDesc"></Input>
+            <Input v-model="formItem.projectDesc" placeholder="请输入projectDesc"></Input>
           </FormItem>
-          <FormItem label="PDT经理" prop="teacherPhone">
-            <Input v-model="formItem.pdtManagerId" placeholder="请输入PDT经理名称"></Input>
+          <FormItem label="项目经理" prop="teacherPhone">
+            <Input v-model="formItem.projectManagerId" placeholder="请输入项目经理名称"></Input>
           </FormItem>
           <FormItem style="text-align: right;">
             <Button type="primary" @click="handleSubmit('add')">提交</Button>
@@ -65,29 +65,6 @@
             <Button style="margin-left: 8px"  @click="handleRemove()">取消</Button>
         </Row>
     </Modal>
-    <Modal
-      :styles="{top: '20px'}"
-      v-model="importModel"
-      title= "批量导入"
-      @on-ok="ok"
-      :mask="true"
-      :footer-hide="true" 
-      transfer
-      :mask-closable="false">
-        <Row style="margin-top: 20px">
-          <Col :span="24">
-            <Upload :action="actionUrl" accept=".xls,.xlsx"  ref="upload" :on-success="uploadSuccess">
-              <Input search enter-button="选择" placeholder="请选择要导入的excel表" style="width: 100%"/>
-            </Upload>
-            <span>仅支持excel表导入，请先下载模版</span>
-            <a href="/proxy/system/download/import_classes_template" target="_blank">下载模板</a>
-          </Col>
-        </Row>
-        <Row style="margin-top: 20px" type="flex" justify="end">
-          <Button type="primary" @click="handleRemove()">提交</Button>
-          <Button style="margin-left: 8px"  @click="handleRemove()">取消</Button>
-        </Row>
-    </Modal> 
   </section>
 </template>
 <script>
@@ -115,9 +92,9 @@ export default {
       treeList: [],
       url: '',
       formItem: {
-        pdtName: '',
-        pdtDesc: '',
-        pdtManagerId: '',
+        projectName: '',
+        projectDesc: '',
+        projectManagerId: '',
       },
       ruleValidate: {
         pdtName: [
@@ -220,7 +197,7 @@ export default {
       for (var i in this.formItem) {
         this.formItem[i] = ""
       }
-      this.url = '/proxy/attendance/pdt/addPdt'
+      this.url = '/proxy/attendance/project/addProject'
       this.$refs['formValidate'].resetFields()
     },
     getUserId (data, schoolId) {
@@ -255,10 +232,10 @@ export default {
       this.customerModel = true
       this.modalTitle = '修改'
       this.formItem['id'] = item['id']
-      this.formItem['pdtName'] = item['pdtName']
-      this.formItem['pdtDesc'] = item['pdtDesc']
-      this.formItem['pdtManagerId'] = item['pdtManagerId']
-      this.url = '/proxy/attendance/pdt/updPdt'     
+      this.formItem['projectName'] = item['projectName']
+      this.formItem['projectDesc'] = item['projectDesc']
+      this.formItem['projectManagerId'] = item['projectManagerId']
+      this.url = '/proxy/attendance/project/updProject'     
     },
     ok () {
       this.$Message.info('Clicked ok')

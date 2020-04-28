@@ -5,15 +5,15 @@
         <Card style="height:84vh; overflow-y:auto">
           <p slot="title">
             <Icon type="android-contact"></Icon>
-              告警详情
+              明细表
           </p>
           <Row class="table-top" style="marginBottom: 11px;">
                 <div style="float: left;">
-                    <Select v-model="check" style="width:110px; marginRight:5px" :filterable="true" placeholder="PDT">
-                        <Option v-for="item in checkList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <Select v-model="check" style="width:110px; marginRight:5px" :filterable="true" placeholder="PDT" @on-change="patChange">
+                        <Option v-for="item in pdtList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                     <Select v-model="check" style="width:110px; marginRight:5px" :filterable="true" placeholder="项目名称">
-                      <Option v-for="item in checkList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                      <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                     <Input v-model="searchValue"  style="width:110px; marginRight:5px"  placeholder="填写人名称" @on-search="search()"/>
                     <DatePicker type="datetimerange" :options="options2" placement="bottom-start" @on-change="onTimeChange" placeholder="请选择要查询的考勤日期起始时间" :value="dataValue" style="width: 300px"></DatePicker>
@@ -34,6 +34,7 @@ import Search from '_c/search/search.vue'
 import Tree from '_c/tree/tree.vue'
 import Tables from '_c/tables'
 import { getTableData } from '@/api/data'
+
 export default {
   components: {
     Search,
@@ -47,7 +48,8 @@ export default {
     this.dataValue = this.options2.shortcuts[0].value()
     this.totalRecord = 0
     this.getUserId()
-    this.getCheckList()
+    this.getPdtList()
+    this.pageChange()
   },
   watch: {},
   name: 'directive_page',
@@ -81,73 +83,78 @@ export default {
       endRow: 0,
       columns1: [
         {
-          type: 'index',
-          title: '序号',
-          width: 60,
+          title: 'PDT名称',
+          key: 'pdtName',
           align: 'center'
         },
         {
-          title: '姓名',
-          key: 'studentName',
+          title: '项目名称',
+          key: 'projectName',
           align: 'center'
         },
         {
-          title: 'IMEI',
-          key: 'imei',
+          title: '填写人名称',
+          key: 'dingTalkUserName',
           align: 'center'
         },
         {
-          title: '所属学校',
-          key: 'schoolName',
+          title: '日期',
+          key: 'dailyDate',
           align: 'center'
         },
         {
-          title: '告警类型',
-          key: 'alarmType',
-          align: 'center',
-          render:  (h, params) => {
-            return h ('div', [
-              h (
-                'p',
-                {
-                  style: {
-                    color: this.getTypeColor(params.index)
-                  }
-                },
-                this.data1[params.index].alarmType
-              )
-            ])
-          }
-        },
-        {
-          title: '告警时间',
-          key: 'alarmTime',
+          title: '岗位',
+          key: 'position',
           align: 'center'
         },
         {
-          title: '定位时间',
-          key: 'locationTime',
+          title: '工作内容',
+          key: 'jobContent',
           align: 'center'
         },
         {
-          title: '定位状态',
-          key: 'locationStatus',
+          title: '百分比(%)',
+          key: 'percent',
           align: 'center'
         },
         {
-          title: '告警地址',
+          title: '当天耗时(H)',
+          key: 'jobDuration',
+          align: 'center'
+        },
+        {
+          title: 'PDT经理',
+          key: 'pdtManagerName',
+          align: 'center'
+        },
+        {
+          title: '项目经理',
+          key: 'pmName',
+          align: 'center'
+        },
+        {
+          title: '部门',
+          key: 'departmentName',
+          align: 'center'
+        },
+        {
+          title: '直接上级',
           key: 'alarmSite',
           align: 'center'
         },
         {
-          title: '已读状态',
-          key: 'readStatus',
-          align: 'center'
-        }
+          title: '填写日期',
+          key: 'dailyDate',
+          align: 'center',
+          render: (h, params) => {
+            return  h('div', new Date(params.row.dailyDate).Format('MM-DD HH:mm')) ;
+          }
+        }       
       ],
       data5: [],
-      checkList: [
+      pdtList: [
       ],
+      projectList: [],
       options2: {
         disabledDate (date) {
           return  (
@@ -315,6 +322,10 @@ export default {
     this.$destroy(true)
   },
   methods: {
+    patChange (id) {
+      debugger
+      this.getProjectList(id)
+    },
     comparePage () {
       this.pageArray.push(this.pageNum)
       this.uniq(this.pageArray)
@@ -340,11 +351,31 @@ export default {
     warnings () {
       this.$Message.warning('查找不到您搜索的信息')
     },
-    getCheckList () {
-      getTableData ('/proxy/alarm/status')
+    getPdtList () {
+      getTableData ('/proxy/attendance/pdt/selPdt')
         .then (res => {
-          this.checkList = res.data
-          console.log(this.checkList)
+          debugger
+          const list = res.data.list;
+          let data = [];
+          list.forEach(element => {
+            data.push({value: element.id, label: element.pdtName})
+          });
+          this.pdtList = data;
+        })
+        .catch (err => {
+          console.log(err)
+        })
+    },
+    getProjectList(id) {
+      getTableData ('/attendance/project/selProject', {pdtId: id})
+        .then (res => {
+          debugger
+          const list = res.data.list;
+          let data = [];
+          list.forEach(element => {
+            data.push({value: element.id, label: element.pdtName})
+          });
+          this.projectList = data;
         })
         .catch (err => {
           console.log(err)
@@ -362,7 +393,7 @@ export default {
       this.currentPage = val
       this.oldPageNum = 1
       this.comparePage()
-      getTableData ('/proxy/report/stat/alarm/details', {
+      getTableData ('/proxy/attendance/daily/selDaily', {
         schoolId: this.schoolId,
         classId: this.classId,
         type: this.check,
@@ -373,8 +404,9 @@ export default {
         query: this.getSearchValue()
       })
         .then (res => {
-          if  (res.data) {
-            this.data1 = res.data.result
+          if (res.data) {
+            debugger
+            this.data1 = res.data.list
             if (this.data1.length < 20) {
               this.pageMax = this.pageNum
             }
@@ -435,7 +467,7 @@ export default {
       }
     },
     jumpShow () {
-      if  (this.$route.params.queryParam) {
+      if (this.$route.params.queryParam) {
         this.initSearchTree ()
         this.check = this.$route.params.queryParam
         this.schoolId = this.$route.params.schoolId

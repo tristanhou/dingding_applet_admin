@@ -1,46 +1,82 @@
 <template>
   <div>
-    <Row type="flex" justity="end" class="butto-box">
-        <Button type="primary">新增</Button>
-    </Row>  
-    <Row type="flex" justify="start" :gutter="20">
+    <Row :gutter="16">
       <Col span="24">
-        <Tables
-          ref="tables"
-          border
-          editable
-          v-model="tableData"
-          :columns="columns"
-          :height="680"
-          @on-delete="removeData"
-          @on-down-record="downRecord"
-          @on-up-record="upRecord"
-        />
+        <Card class="cardHight">
+          <p slot="title">
+            <Icon type="android-contact"></Icon>
+              项目列表
+          </p>
+          <ButtonBox :treeList="data6"></ButtonBox>
+          <Tables :columns="columns1" :data="data1" v-model="data1"  :height="680" @on-change="pageChange" @on-page-size-change="pageSizeChange" :total="total" :currentPage="currentPage">
+          </Tables>
+        </Card>
       </Col>
     </Row>
   </div>
 </template>
 <script>
-import Tables from '_c/tables';
-// import { getData } from '@/api/data';
+import Tree from '_c/tree/tree.vue'
+import Tables from '_c/tables'
+import { getTableData, changeData } from '@/api/data'
+import ButtonBox from '@/view/config/configProject/projectButton'
+import bus from '_c/bus.js'
 export default {
-    name: 'home',
-    components: {
-        Tables
-    },
-    data() {
-        return {
-            dataList: [],
-            tableData: [], // 列表数据
-            columns: [
-                {
-                    type: 'selection',
-                    width: 60,
-                    align: 'center'
-                },
-                { title: 'pdt', key: 'pdt', sortable: true },
-                { title: 'pdt经理', key: 'pdtManager', editable: true },
-               {
+  components: {
+    Tree,
+    ButtonBox,
+    Tables
+  },
+  created () {},
+  mounted () {
+    this.initTreeData(this.$route.params.userId)
+    this.initTableData()
+    bus.$on("initTableData", (item) => {
+      this.initTableData(item)
+      this.initTreeData()
+    })
+  },
+  name: '',
+  data () {
+    return {
+      columns1: [
+        {
+          title: '序号',
+          align: 'center',
+          width: 60,
+          type: 'index'
+        },
+        {
+          title: '项目经理名称',
+          align: 'center',
+          key: 'projectName'
+        },
+        {
+          title: 'projectDesc',
+          align: 'center',
+          key: 'projectDesc'
+        },
+        {
+          title: '项目经理',
+          align: 'center',
+          key: 'projectManagerId'
+        },
+        {
+          title: '状态',
+          align: 'center',
+          key: 'status'
+        },
+        {
+          title: '创建时间',
+          align: 'center',
+          key: 'pdtManagerId'
+        },
+        {
+          title: '更新时间',
+          align: 'center',
+          key: 'status'
+        },
+        {
           title: "操作",
           align: 'center',
           width: 260,
@@ -76,7 +112,7 @@ export default {
             }, '删除'),
             h('Button', {
               props: {
-                type: 'default',
+                type: 'error',
                 size: 'small'
               },
               on: {
@@ -88,161 +124,120 @@ export default {
             ]);
           }
         }
-                ],
-            columnsProps: [
-                {
-                    title: '属性',
-                    key: 'props'
-                },
-                {
-                    title: '说明',
-                    key: 'description'
-                },
-                {
-                    title: '类型',
-                    key: 'type'
-                },
-                {
-                    title: '默认值',
-                    key: 'default'
-                }
-            ],
-            dataProps: [
-                {
-                    props: 'editable',
-                    description: '是否可编辑',
-                    type: 'Boolean',
-                    default: 'false'
-                },
-                {
-                    props: 'showFooter',
-                    description: '是否显示分页组件',
-                    type: 'Boolean',
-                    default: 'false'
-                },
-                {
-                    props: 'totalPage',
-                    description: '总条数',
-                    type: 'Boolean',
-                    default: 'false'
-                },
-                {
-                    props: 'current',
-                    description: '当前页, 每一次初始化后显示第一页',
-                    type: 'Number',
-                    default: '1'
-                }
-            ],
-            columnsEvents: [
-                {
-                    title: '事件名',
-                    key: 'events'
-                },
-                {
-                    title: '说明',
-                    key: 'description'
-                },
-                {
-                    title: '返回值',
-                    key: 'value'
-                }
-            ],
-            dataEvents: [
-                {
-                    events: 'on-delete',
-                    description: '删除时触发',
-                    value: '删除的当前行数据'
-                },
-                {
-                    events: 'on-up-record',
-                    description: '上移一条数据',
-                    value: '上移的当前行数据'
-                },
-                {
-                    events: 'on-down-record',
-                    description: '下移一条数据',
-                    value: '下移的当前行数据'
-                },
-                {
-                    events: 'on-start-edit',
-                    description: '开始编辑',
-                    value: '无'
-                },
-                {
-                    events: 'on-save-edit',
-                    description: '保存编辑',
-                    value: '编辑后的当前行数据'
-                },
-                {
-                    events: 'on-cancel-edit',
-                    description: '取消编辑',
-                    value: '无'
-                }                
-            ],
-            dataCol: [
-                {
-                    props: 'options',
-                    description: '操作项，["delete"]: 删除；["change"]: 上下移',
-                    type: 'Array',
-                    default: '无'
-                },
-                {
-                    props: 'enum',
-                    description: '枚举项，[{0, "男"},{1, "女"}]',
-                    type: 'Array',
-                    default: '无'
-                }
-            ],
-        };
-    },
-    mounted() {
-        this.initTableData();
-    },
-    methods: {
-        show(index) {
-            alert(index)
-        },
-    // 下移
-        downRecord(val) {
-            this.tableData[val.index] = this.tableData.splice(
-                val.index + 1,
-                1,
-                this.tableData[val.index]
-            )[0];
-        },
-        // 上移
-        upRecord(val) {
-            this.tableData[val.index] = this.tableData.splice(
-                val.index - 1,
-                1,
-                this.tableData[val.index]
-            )[0];
-        },
-        removeData(params) {
-            this.tableData.filter((item, index) => index !== params.row.initRowIndex);
-        },
-        initTableData() {
-            // this.$loading.show();
-            this.$http.get(this.$api.GET_CONFIGPDT_LIST).then(res => {
-                debugger
-                this.tableData = res.data;
-                this.$loading.hide();
-            });
-        }
+      ],
+      data5: [],
+      data6: [],
+      data1: [],
+      page: {
+        pageNum: 1,
+        pageSize: 20
+      },
+      total: 0,
+      autoCompletedata: [],
+      userId: null,
+      currentPage: null,
+      isExpandAll: null
     }
-};
+  },
+  methods: {
+    // 打开编辑弹框并传值
+    editSchedule(item) {
+        debugger
+      bus.$emit('editSchedule', item.row)
+    },
+    showModal () {
+      this.modalVisible = true
+    },
+    onSelectChange (data) {
+      if (data.length === 0) {
+        // this.initTableData('', '')
+      } else {
+        this.initTableData(null, data[0].userId, data[0].classId)
+        this.currentPage = 1
+        this.page.pageNum = 1
+      }
+      bus.$emit('setKeyword')
+    },
+    // 删除列表数据
+    removeCustomer (item) {
+        debugger
+      this.$Modal.confirm({
+        title: '删除',
+        content: '<p>是否确认删除？</p>',
+        onOk: () => {
+          changeData('/proxy/attendance/project/delProject', {id: item.row.id}).then(res => {
+              debugger
+            if (res.data === 1) {
+              this.$Message.success(res.msg)
+              this.initTableData()
+            } else {
+              this.$Message.warning(res.msg)
+            }
+          })
+        }
+      })
+    },
+    // 初始化加载列表数据
+    initTableData (keyword, userId, classId) {
+      let params = this.page
+      params["keyword"] = keyword
+      userId != undefined && (params["userId"] = userId)
+      classId != undefined && (params["classId"] = classId)
+      debugger
+      getTableData('/proxy/attendance/project/selProject', params).then(res => {
+           debugger
+        this.data1 = res.data.list
+        this.total = Number(res.data.total)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    initTreeData (data) {
+      let params = data;
+      getTableData('/proxy/customer/listCustomerTree', params).then(res => {
+        this.formatTreeData(res.data)
+        this.data5 = res.data
+        this.data6 = JSON.parse(JSON.stringify(res.data))
+        data != undefined && (this.userId = data)
+      }).catch(err => {
+        console.log(err)
+      })      
+    },
+    formatTreeData (data) {
+      data.forEach((item) => {
+        item.title = item.name
+        item.expand = true
+        item.children != undefined && this.formatTreeData(item.children)
+      })
+    },
+    submitSchedule (item) {
+      bus.$emit('setSchedule', item.row)
+    },
+    pageChange (item) {
+      this.currentPage = item
+      this.page['pageNum'] = item
+      this.initTableData()
+    },
+    pageSizeChange (item) {
+      this.page['pageSize'] = item
+      this.initTableData()
+    },
+    autoCompleteChange (value) {
+      console.log(value)
+      let params = {"name": value}
+      getTableData('/proxy/class/listFuzzyClass', params).then(res => {
+        this.autoCompletedata = res.data
+        
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    hasSelectedData (value) {
+      this.initTableData(null, value)
+    }
+  }
+}
 </script>
 
-<style lang="less">
-
-.count-style {
-  font-size: 50px;
-}
-
-.butto-box {
-    justify-content: flex-end;
-    button {
-        margin-left: 10px
-    }
-}
+<style>
 </style>

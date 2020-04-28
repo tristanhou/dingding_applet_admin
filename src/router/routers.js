@@ -87,15 +87,15 @@ export default [
                 },
                 component: () => import('@/view/config/configPdt/configPdt.vue')
             },
-            {
-                path: 'configProjectManager',
-                name: 'configProjectManager',
-                meta: {
-                    icon: 'ios-infinite',
-                    title: '项目经理配置'
-                },
-                component: () => import('@/view/config/configProjectManager/configProjectManager.vue')
-            },
+            // {
+            //     path: 'configProjectManager',
+            //     name: 'configProjectManager',
+            //     meta: {
+            //         icon: 'ios-infinite',
+            //         title: '项目经理配置'
+            //     },
+            //     component: () => import('@/view/config/configProjectManager/configProjectManager.vue')
+            // },
             {
                 path: 'configProject',
                 name: 'configProject',
@@ -164,84 +164,84 @@ export default [
             },          
         ]
     },
-    {
-        path: '/components',
-        name: 'components',
-        meta: {
-            icon: 'logo-buffer',
-            title: '组件'
-        },
-        component: Main,
-        children: [
-            {
-                path: 'selectTree',
-                name: 'selectTree',
-                meta: {
-                    icon: 'ios-infinite',
-                    title: '树状下拉菜单'
-                },
-                component: () => import('@/view/components/selectTree/selectTree.vue')
-            },
-            {
-                path: 'trees',
-                name: 'trees',
-                meta: {
-                    icon: 'md-git-branch',
-                    title: '组织树'
-                },
-                component: () => import('@/view/components/trees/trees.vue')
-            },
-            {
-                path: 'tables',
-                name: 'tables',
-                meta: {
-                    icon: 'md-git-branch',
-                    title: '功能表格'
-                },
-                component: () => import('@/view/components/tables/table.vue')
-            },
-            // lofin-from组件
-            {
-                path:'login_form',
-                name:'login_form',
-                meta:{
-                    icon: 'md-git-branch',
-                    title: '登录表单'
-                },
-                component:resolve => require(['@/view/components/login/login.vue'],resolve)
-            },
-            // imei搜索组件
-            {
-                path:'search',
-                name:'search',
-                meta:{
-                    icon: 'md-git-branch',
-                    title: 'IMEI搜索'
-                },
-                component:resolve => require(['@/view/components/search/search.vue'],resolve)
-            },
-            // 树表可懒加载组件
-            {
-                path:'tree_table',
-                name:'tree_table',
-                meta:{
-                    icon: 'md-git-branch',
-                    title: '树表格'
-                },
-                component:resolve => require(['@/view/components/treeTable/treeTable.vue'],resolve)
-            },
-            // 懒加载树
-            {
-                path:'load_tree',
-                name:'load_tree',
-                meta:{
-                    icon: 'md-git-branch',
-                    title: '树表格'
-                },
-                component:resolve => require(['@/view/components/loadTree/loadTree.vue'],resolve)
-            }
-        ]
-    },
+    // {
+    //     path: '/components',
+    //     name: 'components',
+    //     meta: {
+    //         icon: 'logo-buffer',
+    //         title: '组件'
+    //     },
+    //     component: Main,
+    //     children: [
+    //         {
+    //             path: 'selectTree',
+    //             name: 'selectTree',
+    //             meta: {
+    //                 icon: 'ios-infinite',
+    //                 title: '树状下拉菜单'
+    //             },
+    //             component: () => import('@/view/components/selectTree/selectTree.vue')
+    //         },
+    //         {
+    //             path: 'trees',
+    //             name: 'trees',
+    //             meta: {
+    //                 icon: 'md-git-branch',
+    //                 title: '组织树'
+    //             },
+    //             component: () => import('@/view/components/trees/trees.vue')
+    //         },
+    //         {
+    //             path: 'tables',
+    //             name: 'tables',
+    //             meta: {
+    //                 icon: 'md-git-branch',
+    //                 title: '功能表格'
+    //             },
+    //             component: () => import('@/view/components/tables/table.vue')
+    //         },
+    //         // lofin-from组件
+    //         {
+    //             path:'login_form',
+    //             name:'login_form',
+    //             meta:{
+    //                 icon: 'md-git-branch',
+    //                 title: '登录表单'
+    //             },
+    //             component:resolve => require(['@/view/components/login/login.vue'],resolve)
+    //         },
+    //         // imei搜索组件
+    //         {
+    //             path:'search',
+    //             name:'search',
+    //             meta:{
+    //                 icon: 'md-git-branch',
+    //                 title: 'IMEI搜索'
+    //             },
+    //             component:resolve => require(['@/view/components/search/search.vue'],resolve)
+    //         },
+    //         // 树表可懒加载组件
+    //         {
+    //             path:'tree_table',
+    //             name:'tree_table',
+    //             meta:{
+    //                 icon: 'md-git-branch',
+    //                 title: '树表格'
+    //             },
+    //             component:resolve => require(['@/view/components/treeTable/treeTable.vue'],resolve)
+    //         },
+    //         // 懒加载树
+    //         {
+    //             path:'load_tree',
+    //             name:'load_tree',
+    //             meta:{
+    //                 icon: 'md-git-branch',
+    //                 title: '树表格'
+    //             },
+    //             component:resolve => require(['@/view/components/loadTree/loadTree.vue'],resolve)
+    //         }
+    //     ]
+    // },
     {
         path: '/401',
         name: 'error_401',

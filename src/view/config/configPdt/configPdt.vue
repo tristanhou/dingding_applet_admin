@@ -1,25 +1,11 @@
 <template>
   <div>
     <Row :gutter="16">
-      <Col span="4">
-        <Card class="cardHight">
-          <p slot="title">
-              <Icon type="android-contact"></Icon>
-              班级管理
-          </p>
-          <span slot="extra">
-            <Tooltip content="每个学校最多添加200个班级" placement="top" style="z-index: 9998">
-              <Icon type="md-help-circle" />
-            </Tooltip>
-          </span>
-          <Tree @on-select-change="onSelectChange" :dataTree="data5" @auto-complete-change="autoCompleteChange" :dataAuto="autoCompletedata" :isAutoComplete="true" :isExpandAll="isExpandAll" :userId="userId" @has-selected-data="hasSelectedData"></Tree>
-        </Card>
-      </Col>
-      <Col span="20">
+      <Col span="24">
         <Card class="cardHight">
           <p slot="title">
             <Icon type="android-contact"></Icon>
-              班级列表
+              PDT 列表
           </p>
           <ButtonBox :treeList="data6"></ButtonBox>
           <Tables :columns="columns1" :data="data1" v-model="data1"  :height="680" @on-change="pageChange" @on-page-size-change="pageSizeChange" :total="total" :currentPage="currentPage">
@@ -61,24 +47,34 @@ export default {
           type: 'index'
         },
         {
-          title: '班级名称',
+          title: 'PDT名称',
           align: 'center',
-          key: 'className'
+          key: 'pdtName'
         },
         {
-          title: '班主任',
+          title: 'pdtDesc',
           align: 'center',
-          key: 'classTeacher'
+          key: 'pdtDesc'
         },
         {
-          title: '班主任电话',
+          title: 'PDT经理',
           align: 'center',
-          key: 'teacherPhone'
+          key: 'pdtManagerId'
         },
         {
-          title: '所属学校',
+          title: '状态',
           align: 'center',
-          key: 'schoolName'
+          key: 'status'
+        },
+        {
+          title: '创建时间',
+          align: 'center',
+          key: 'pdtManagerId'
+        },
+        {
+          title: '更新时间',
+          align: 'center',
+          key: 'status'
         },
         {
           title: "操作",
@@ -146,6 +142,7 @@ export default {
   methods: {
     // 打开编辑弹框并传值
     editSchedule(item) {
+        debugger
       bus.$emit('editSchedule', item.row)
     },
     showModal () {
@@ -163,15 +160,16 @@ export default {
     },
     // 删除列表数据
     removeCustomer (item) {
+        debugger
       this.$Modal.confirm({
         title: '删除',
         content: '<p>是否确认删除？</p>',
         onOk: () => {
-          changeData('/proxy/class/delClass/' + item.row.classId).then(res => {
-            if (res.code === 0) {
+          changeData('/proxy/attendance/pdt/delPdt', {id: item.row.id}).then(res => {
+              debugger
+            if (res.data === 1) {
               this.$Message.success(res.msg)
               this.initTableData()
-              this.initTreeData()
             } else {
               this.$Message.warning(res.msg)
             }
@@ -185,7 +183,9 @@ export default {
       params["keyword"] = keyword
       userId != undefined && (params["userId"] = userId)
       classId != undefined && (params["classId"] = classId)
-      getTableData('/proxy/class/listClass', params).then(res => {
+      debugger
+      getTableData('/proxy/attendance/pdt/selPdt', params).then(res => {
+           debugger
         this.data1 = res.data.list
         this.total = Number(res.data.total)
       }).catch(err => {

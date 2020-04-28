@@ -43,7 +43,8 @@ module.exports = {
         port: 8088,
         proxy: {
             '/proxy/*': {
-                target: 'http://10.0.20.20:8080/',
+                target: 'http://172.16.10.115:8090/',
+                // target: 'http://10.0.20.20:8080/', // 杨健本地仓库
                 // target: 'http://10.0.16.241:9999/', // 本地ip
                 // target: 'https://www.easy-mock.com/mock/5bce871a98c3e07240b7e07e/jimilbs',
                 changeOrigin: true,
