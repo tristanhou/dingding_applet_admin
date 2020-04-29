@@ -133,7 +133,7 @@ export default {
         },
         totalPage: {
             type: Number,
-            default: 20
+            default: 0
         },
         current: {
             type: Number,

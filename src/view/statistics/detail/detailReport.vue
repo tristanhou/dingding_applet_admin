@@ -9,20 +9,20 @@
           </p>
           <Row class="table-top" style="marginBottom: 11px;">
                 <div style="float: left;">
-                    <Select v-model="check" style="width:110px; marginRight:5px" :filterable="true" placeholder="PDT" @on-change="patChange">
+                    <Select v-model="pdtSelect" style="width:110px; marginRight:5px" :filterable="true" placeholder="PDT" @on-change="pdtChange">
                         <Option v-for="item in pdtList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
-                    <Select v-model="check" style="width:110px; marginRight:5px" :filterable="true" placeholder="项目名称">
+                    <Select v-model="projectSelect" style="width:110px; marginRight:5px" :filterable="true" placeholder="项目名称">
                       <Option v-for="item in projectList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
                     <Input v-model="searchValue"  style="width:110px; marginRight:5px"  placeholder="填写人名称" @on-search="search()"/>
-                    <DatePicker type="datetimerange" :options="options2" placement="bottom-start" @on-change="onTimeChange" placeholder="请选择要查询的考勤日期起始时间" :value="dataValue" style="width: 300px"></DatePicker>
+                    <Date-picker type="date" placeholder="选择日期" style="width: 200px" @on-change="onDateChange"></Date-picker>
                     <Button style="marginRight:5px; marginLeft:5px" type="primary" @click="seek()">查询</Button>
                     <Button style="marginRight:5px" type="primary" @click="exportDatas()">导出<Icon type="ios-download-outline"></Icon></Button>
                 </div>
                
             </Row>
-          <Tables :columns="columns1" :total="totalRecord" :show-total="false" @on-change="pageChange" :currentPage="currentPage" :data="data1" v-model="data1" ref="table" :height="600">
+          <Tables :columns="detailColumns" :totalPage="totalRecord" :show-total="false" @on-page-change="pageChange" :currentPage="currentPage" :data="detailData" v-model="detailData" ref="table" :height="600" @on-page-size-change="pageSizeChange">
           </Tables>
         </Card>
       </Col>
@@ -43,33 +43,24 @@ export default {
   },
   created () {},
   mounted () {
-    this.checkedData = this.columns1
-    this.dateOptions = 'TODAY'
-    this.dataValue = this.options2.shortcuts[0].value()
     this.totalRecord = 0
-    this.getUserId()
     this.getPdtList()
-    this.pageChange()
+    this.initTableData()
   },
   watch: {},
   name: 'directive_page',
   data () {
     return {
-      autoCompletedata: [],
-      id: '',
-      userId: '',
+ 
       pageNum: 1,
-      oldPageNum: 1,
+      pageSize: 20,
       pageMax: 0,
       pageArray: [1],
       pageFlag: true,
       currentPage: 1,
       totalRecord: 0,
-      schoolId: '',
-      classId: '',
-      check: '',
-      checkCode: [],
-      checkValue: [],
+      pdtSelect: '', // pdt 下拉框 modal
+      projectSelect: '', // 项目下拉框 modal
       typeFontColor: '',
       dataValue: null,
       isExpandAll: null,
@@ -81,7 +72,7 @@ export default {
       serial: 0,
       list: [],
       endRow: 0,
-      columns1: [
+      detailColumns: [ // 明细表
         {
           title: 'PDT名称',
           key: 'pdtName',
@@ -98,9 +89,12 @@ export default {
           align: 'center'
         },
         {
-          title: '日期',
+          title: '填写日期',
           key: 'dailyDate',
-          align: 'center'
+          align: 'center',
+          render: (h, params) => {
+            return  h('div', new Date(params.row.dailyDate).Format('YYYY-MM-DD')) ;
+          }
         },
         {
           title: '岗位',
@@ -141,20 +135,10 @@ export default {
           title: '直接上级',
           key: 'alarmSite',
           align: 'center'
-        },
-        {
-          title: '填写日期',
-          key: 'dailyDate',
-          align: 'center',
-          render: (h, params) => {
-            return  h('div', new Date(params.row.dailyDate).Format('MM-DD HH:mm')) ;
-          }
-        }       
+        }
       ],
-      data5: [],
-      pdtList: [
-      ],
-      projectList: [],
+      pdtList: [], // pdt 下拉数据
+      projectList: [], // 项目下拉数据
       options2: {
         disabledDate (date) {
           return  (
@@ -293,63 +277,27 @@ export default {
           }
         ]
       },
-      data1: [],
+      detailData: [], // 明细表列表数据 
       modalVisible: false,
       options: {
         trigger: '.ivu-modal-body',
         body: '.ivu-modal',
         recover: true
       },
-      buttonOptions: {
-        trigger: '.draggable-btn',
-        body: '.draggable-btn'
-      },
-      statu: 1,
-      listArr: []
+      dailyDate: '', // 上报日期
+      pdtId: '', // pdt id
+      projectId: '', // 项目id
+      dingTalkUserName: '' // 填写人名称
     }
-  },
-  watch: {
-    pageNum(ne, ol) {
-      this.oldPageNum = ol
-    }
-  },
-  computed: {
-    obj: function (argument) {
-      return Object.freeze(this.columns1)
-    }
-  },
-  deactivated () {
-    this.$destroy(true)
   },
   methods: {
-    patChange (id) {
-      debugger
-      this.getProjectList(id)
+    // pdt 列表 change 事件
+    pdtChange(val) {
+      this.getProjectList(val)
     },
-    comparePage () {
-      this.pageArray.push(this.pageNum)
-      this.uniq(this.pageArray)
-      let max = Math.max.apply(null,this.uniq(this.pageArray))
-      if (this.pageNum >= max && this.oldPageNum !== max) {
-        this.pageFlag = true
-      } else {
-        this.pageFlag = false
-      }
-    },
-    uniq (array) {
-    let temp = []
-    for (let i = 0; i < array.length; i++) {
-      if (temp.indexOf(array[i]) == -1) {
-        temp.push(array[i])
-      }
-    }
-      return temp
-    },
-    warning () {
-      this.$Message.warning('请输入学生姓名或IMEI号进行搜索')
-    },
-    warnings () {
-      this.$Message.warning('查找不到您搜索的信息')
+    // 日期
+    onDateChange(val) {
+
     },
     getPdtList () {
       getTableData ('/proxy/attendance/pdt/selPdt')
@@ -367,13 +315,13 @@ export default {
         })
     },
     getProjectList(id) {
-      getTableData ('/attendance/project/selProject', {pdtId: id})
+      getTableData ('/proxy/attendance/project/selProjectByPdtId', {pdtId: id})
         .then (res => {
           debugger
           const list = res.data.list;
           let data = [];
           list.forEach(element => {
-            data.push({value: element.id, label: element.pdtName})
+            data.push({value: element.id, label: element.projectName})
           });
           this.projectList = data;
         })
@@ -381,46 +329,31 @@ export default {
           console.log(err)
         })
     },
-    getTotal () {
-      if (this.data1.length >= 20) {
-        this.totalRecord = 21
-      } else {
-        this.totalRecord = 20
-      }
-    },
-    pageChange (val) {
-      this.pageNum = val
-      this.currentPage = val
-      this.oldPageNum = 1
-      this.comparePage()
+    initTableData() {
       getTableData ('/proxy/attendance/daily/selDaily', {
-        schoolId: this.schoolId,
-        classId: this.classId,
-        type: this.check,
-        time: this.dateOptions,
-        startTime: this.startTime,
-        endTime: this.endTime,
         pageNum: this.pageNum,
+        pageSize: this.pageSize,
         query: this.getSearchValue()
       })
         .then (res => {
           if (res.data) {
             debugger
-            this.data1 = res.data.list
-            if (this.data1.length < 20) {
-              this.pageMax = this.pageNum
-            }
-            if (this.data1.length >= 20 && this.pageFlag && this.pageMax === 0) {
-              this.totalRecord = this.totalRecord + 20
-            }
+            this.detailData = res.data.list
+            this.totalRecord = res.data.total
           } else {
-            this.data1 = []
+            this.detailData = []
           }
         })
         .catch (err => {
           console.log(err)
         })
         console.log(this.totalRecord)
+    },
+    pageChange (val) {
+      debugger
+      this.pageNum = val
+      this.currentPage = val
+      this.initTableData()
     },
     error () {
       this.$Message.error('请选择学校或班级进行查询')
@@ -431,7 +364,7 @@ export default {
     getSearchValue () {
       return this.trim(this.searchValue, 'g')
     },
-    trim (str,is_global) {
+    trim (str, is_global) {
       let result
       result = str.replace(/(^\s+)|(\s+$)/g,"");
       if(is_global.toLowerCase()=="g")
@@ -439,175 +372,6 @@ export default {
         result = result.replace(/\s/g,"");
       }
       return result;
-    },
-    getUserId () {
-      if (this.$route.params.userId) {
-        this.initTreeData(this.$route.params.userId)
-      } else {
-        this.jumpShow()
-      }
-    },
-    autoCompleteChange (value) {
-      console.log(value)
-      let params = {"name": value}
-      getTableData('/proxy/class/listFuzzyClass', params).then(res => {
-        this.autoCompletedata = res.data    
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    getTypeColor (index) {
-      if  (
-        this.data1[index].alarmType == 'SOS报警' ||
-        this.data1[index].alarmType == '危险区域报警'
-      ) {
-        return  (this.typeFontColor = 'red')
-      } else {
-        return  (this.typeFontColor = '')
-      }
-    },
-    jumpShow () {
-      if (this.$route.params.queryParam) {
-        this.initSearchTree ()
-        this.check = this.$route.params.queryParam
-        this.schoolId = this.$route.params.schoolId
-        this.classId = this.$route.params.classId
-        this.dateOptions = this.$route.params.time
-        this.startTime = this.$route.params.startTime
-        this.endTime = this.$route.params.endTime
-        this.searchValue = this.$route.params.query
-        getTableData ('/proxy/report/stat/alarm/details', {
-          schoolId: this.schoolId,
-          classId: this.classId,
-          type: this.check,
-          time: this.dateOptions,
-          startTime: this.startTime,
-          endTime: this.endTime,
-          query: this.getSearchValue(),
-          pageNum: 1
-        })
-          .then (res => {
-            if  (res.data) {
-              this.data1 = res.data.result
-              this.getTotal()
-            } else {
-              this.data1 = []
-            }
-          })
-          .catch (err => {
-            console.log(err)
-          })
-      } else {
-        this.check = 'all'
-        this.initTreeData()
-      }
-    },
-    initSearchTree (data) {
-      let params = data
-      getTableData ('/proxy/class/listClassTree', params)
-        .then(res => {
-          this.formatTreeData(res.data)
-          this.isExpandAll = true
-          this.data5 = res.data
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    initTreeData (data) {
-      let params = data
-      getTableData ('/proxy/class/listClassTree', params)
-        .then(res => {
-          this.formatTreeData (res.data)
-          this.isExpandAll = true
-          this.data5 = res.data
-          if (data) {
-            this.userId = data
-          }
-          this.getFirstSchool (this.data5[0])
-          getTableData ('/proxy/report/stat/alarm/details', {
-            schoolId: this.schoolId,
-            type: this.check,
-            time: 'TODAY',
-            classId: this.classId,
-            pageNum: 1
-          })
-            .then(res => {
-              if  (res.data) {
-                this.data1 = res.data.result
-                this.getTotal()
-              } else {
-                this.data1 = []
-                this.totalRecord = 0
-              }
-            })
-            .catch(err => {
-              console.log(err)
-            })
-        })
-        .catch (err => {
-          console.log(err)
-        })
-    },
-    formatTreeData (data) {
-      data.forEach(item => {
-        item.title = item.name
-        item.children != undefined && this.formatTreeData(item.children)
-      })
-    },
-    getFirstSchool (data) {
-      if  (data.schoolId == null) {
-        // data.expand = true
-        if  (data.children[0].schoolId == null) {
-          this.getFirstSchool (data.children[0])
-          // data.children[0].expand = true
-        } else {
-          this.schoolId = data.children[0].schoolId
-          this.statUnit = data.children[0].name
-          this.userId = data.children[0].userId
-        }
-      } else {
-        this.schoolId = data.schoolId
-        this.statUnit = data.name
-        this.userId = data.userId
-      }
-    },
-    onSelectChange (root, node, data) {
-      if (root[0]) {
-        if (root[0].schoolId) {
-          this.schoolId = root[0].schoolId
-          if (root[0].classId) {
-            this.classId = root[0].classId
-          } else {
-            this.classId = ''
-          }
-        } else {
-          root[0].selected = false
-        }
-      }
-    },
-    add (time) {
-      return time < 10 ? '0' + time : time
-    },
-    getRightTime (d) {
-      let rightTime =
-        this.add(d.getFullYear()) +
-        '-' +
-        this.add(d.getMonth() + 1) +
-        '-' +
-        this.add(d.getDate()) +
-        ' ' +
-        this.add(d.getHours()) +
-        ':' +
-        this.add(d.getMinutes()) +
-        ':' +
-        this.add(d.getSeconds())
-      return rightTime
-    },
-    onTimeChange (datetimerange) {
-      this.dataValue = datetimerange
-      this.startTime = this.getRightTime (new Date (this.dataValue[0]))
-      this.endTime = this.getRightTime (new Date (this.dataValue[1]))
     },
     seek () {
       this.pageNum = 1
@@ -700,6 +464,10 @@ export default {
           console.log(err)
         })
       }
+    },
+    pageSizeChange (val) {
+      this.pageSize = val
+      this.initTableData()
     }
   }
 }

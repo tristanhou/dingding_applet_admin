@@ -16,24 +16,20 @@
   </div>
 </template>
 <script>
-import Tree from '_c/tree/tree.vue'
 import Tables from '_c/tables'
 import { getTableData, changeData } from '@/api/data'
 import ButtonBox from '@/view/config/configProject/projectButton'
 import bus from '_c/bus.js'
 export default {
   components: {
-    Tree,
     ButtonBox,
     Tables
   },
   created () {},
   mounted () {
-    this.initTreeData(this.$route.params.userId)
     this.initTableData()
     bus.$on("initTableData", (item) => {
       this.initTableData(item)
-      this.initTreeData()
     })
   },
   name: '',
@@ -47,7 +43,7 @@ export default {
           type: 'index'
         },
         {
-          title: '项目经理名称',
+          title: '项目名称',
           align: 'center',
           key: 'projectName'
         },
@@ -111,16 +107,31 @@ export default {
               }
             }, '删除'),
             h('Button', {
-              props: {
-                type: 'error',
-                size: 'small'
-              },
-              on: {
-                click: () => {
-                    this.submitSchedule(params)
+                props: {
+                    type: 'error',
+                    size: 'small'
+                },
+                style: {
+                    marginRight: '5px'
+                },
+                on: {
+                    click: () => {
+                        this.submitSchedule(params)
+                    }
                 }
-              }
-            }, '课程表')
+            }, '启用'), 
+            h('Button', {
+                props: {
+                    type: 'error',
+                    size: 'small'
+                },
+ 
+                on: {
+                    click: () => {
+                        this.submitSchedule(params)
+                    }
+                }
+            }, '停用')
             ]);
           }
         }
@@ -162,6 +173,7 @@ export default {
     removeCustomer (item) {
         debugger
       this.$Modal.confirm({
+        top: '200px', 
         title: '删除',
         content: '<p>是否确认删除？</p>',
         onOk: () => {
@@ -190,24 +202,6 @@ export default {
         this.total = Number(res.data.total)
       }).catch(err => {
         console.log(err)
-      })
-    },
-    initTreeData (data) {
-      let params = data;
-      getTableData('/proxy/customer/listCustomerTree', params).then(res => {
-        this.formatTreeData(res.data)
-        this.data5 = res.data
-        this.data6 = JSON.parse(JSON.stringify(res.data))
-        data != undefined && (this.userId = data)
-      }).catch(err => {
-        console.log(err)
-      })      
-    },
-    formatTreeData (data) {
-      data.forEach((item) => {
-        item.title = item.name
-        item.expand = true
-        item.children != undefined && this.formatTreeData(item.children)
       })
     },
     submitSchedule (item) {

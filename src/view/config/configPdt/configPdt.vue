@@ -8,7 +8,7 @@
               PDT 列表
           </p>
           <ButtonBox :treeList="data6"></ButtonBox>
-          <Tables :columns="columns1" :data="data1" v-model="data1"  :height="680" @on-change="pageChange" @on-page-size-change="pageSizeChange" :total="total" :currentPage="currentPage">
+          <Tables :columns="columns1" :data="pdtData" v-model="pdtData"  :height="680" @on-change="pageChange" @on-page-size-change="pageSizeChange" :totalPage="total" :currentPage="currentPage">
           </Tables>
         </Card>
       </Col>
@@ -16,24 +16,20 @@
   </div>
 </template>
 <script>
-import Tree from '_c/tree/tree.vue'
 import Tables from '_c/tables'
 import { getTableData, changeData } from '@/api/data'
 import ButtonBox from '@/view/config/configPdt/pdtButton'
 import bus from '_c/bus.js'
 export default {
   components: {
-    Tree,
     ButtonBox,
     Tables
   },
   created () {},
   mounted () {
-    this.initTreeData(this.$route.params.userId)
     this.initTableData()
     bus.$on("initTableData", (item) => {
       this.initTableData(item)
-      this.initTreeData()
     })
   },
   name: '',
@@ -110,24 +106,13 @@ export default {
                 }
               }
             }, '删除'),
-            h('Button', {
-              props: {
-                type: 'error',
-                size: 'small'
-              },
-              on: {
-                click: () => {
-                    this.submitSchedule(params)
-                }
-              }
-            }, '课程表')
             ]);
           }
         }
       ],
       data5: [],
       data6: [],
-      data1: [],
+      pdtData: [],
       page: {
         pageNum: 1,
         pageSize: 20
@@ -160,15 +145,13 @@ export default {
     },
     // 删除列表数据
     removeCustomer (item) {
-        debugger
       this.$Modal.confirm({
         title: '删除',
         content: '<p>是否确认删除？</p>',
         onOk: () => {
           changeData('/proxy/attendance/pdt/delPdt', {id: item.row.id}).then(res => {
-              debugger
             if (res.data === 1) {
-              this.$Message.success(res.msg)
+              this.$Message.success('删除成功')
               this.initTableData()
             } else {
               this.$Message.warning(res.msg)
@@ -183,35 +166,13 @@ export default {
       params["keyword"] = keyword
       userId != undefined && (params["userId"] = userId)
       classId != undefined && (params["classId"] = classId)
-      debugger
       getTableData('/proxy/attendance/pdt/selPdt', params).then(res => {
            debugger
-        this.data1 = res.data.list
+        this.pdtData = res.data.list
         this.total = Number(res.data.total)
       }).catch(err => {
         console.log(err)
       })
-    },
-    initTreeData (data) {
-      let params = data;
-      getTableData('/proxy/customer/listCustomerTree', params).then(res => {
-        this.formatTreeData(res.data)
-        this.data5 = res.data
-        this.data6 = JSON.parse(JSON.stringify(res.data))
-        data != undefined && (this.userId = data)
-      }).catch(err => {
-        console.log(err)
-      })      
-    },
-    formatTreeData (data) {
-      data.forEach((item) => {
-        item.title = item.name
-        item.expand = true
-        item.children != undefined && this.formatTreeData(item.children)
-      })
-    },
-    submitSchedule (item) {
-      bus.$emit('setSchedule', item.row)
     },
     pageChange (item) {
       this.currentPage = item
@@ -221,19 +182,6 @@ export default {
     pageSizeChange (item) {
       this.page['pageSize'] = item
       this.initTableData()
-    },
-    autoCompleteChange (value) {
-      console.log(value)
-      let params = {"name": value}
-      getTableData('/proxy/class/listFuzzyClass', params).then(res => {
-        this.autoCompletedata = res.data
-        
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    hasSelectedData (value) {
-      this.initTableData(null, value)
     }
   }
 }

@@ -4,7 +4,7 @@
       新增
     </Button>
     <div style="float: right;width: 260px">
-      <Input search enter-button="搜索" placeholder="搜索班级名称或班主任" @on-search="classSearch" v-model="searchModel"/>
+      <Input search enter-button="搜索" placeholder="搜索pdt" @on-search="classSearch" v-model="searchModel"/>
     </div>
     <Modal
       :styles="{top: '20px'}"
@@ -31,67 +31,9 @@
           </FormItem>
         </Form>
     </Modal> 
-    <Modal
-      :styles="{top: '20px', width:'680px'}"
-      v-model="scheduleModel"
-      v-bind:title= "scheduleTitle"
-      @on-ok="ok"
-      :mask="true"
-      :footer-hide="true" 
-      transfer
-      :mask-closable="false">
-        <Row style="margin-top: 20px">
-          <Col :span="14">
-            <Button type="primary" @click="exportSchedule">导入课程表</Button>
-            <span>课程表仅支持excel表导入</span>
-          </Col>
-        </Row>
-        <Row style="margin-top: 20px">
-          <Table :columns="scheduleColumns" :data="scheduleData"></Table>
-        </Row>
-        <Row style="margin-top: 20px">
-          <Col :span="8">
-            学校：{{ this.scheduleSelection.schoolName }}
-          </Col>
-          <Col :span="8">
-            班级：{{ this.scheduleSelection.className }}
-          </Col>
-          <Col :span="8">
-            班主任：{{ this.scheduleSelection.classTeacher }}
-          </Col>         
-        </Row>
-        <Row style="margin-top: 20px" type="flex" justify="end">
-            <Button type="primary" @click="submit()">提交</Button>
-            <Button style="margin-left: 8px"  @click="handleRemove()">取消</Button>
-        </Row>
-    </Modal>
-    <Modal
-      :styles="{top: '20px'}"
-      v-model="importModel"
-      title= "批量导入"
-      @on-ok="ok"
-      :mask="true"
-      :footer-hide="true" 
-      transfer
-      :mask-closable="false">
-        <Row style="margin-top: 20px">
-          <Col :span="24">
-            <Upload :action="actionUrl" accept=".xls,.xlsx"  ref="upload" :on-success="uploadSuccess">
-              <Input search enter-button="选择" placeholder="请选择要导入的excel表" style="width: 100%"/>
-            </Upload>
-            <span>仅支持excel表导入，请先下载模版</span>
-            <a href="/proxy/system/download/import_classes_template" target="_blank">下载模板</a>
-          </Col>
-        </Row>
-        <Row style="margin-top: 20px" type="flex" justify="end">
-          <Button type="primary" @click="handleRemove()">提交</Button>
-          <Button style="margin-left: 8px"  @click="handleRemove()">取消</Button>
-        </Row>
-    </Modal> 
   </section>
 </template>
 <script>
-import Tree from '_c/tree/tree.vue'
 import { changeData, getTableData } from '@/api/data'
 import bus from '_c/bus.js'
 export default {
@@ -105,14 +47,12 @@ export default {
     }
   },
   components: {
-    Tree
   },
   data () {
     return {
       customerModel: false,
       importModel: false,
       modalTitle: null,
-      treeList: [],
       url: '',
       formItem: {
         pdtName: '',
@@ -135,57 +75,6 @@ export default {
           {pattern: /^1[34578]\d{9}$/, message: '手机号码输入错误', trigger: 'blur' }
         ],
       },
-      scheduleModel: false,
-      scheduleTitle: '课程表',
-      scheduleColumns: [
-        {
-          title: '序号',
-          align: 'center',
-          type: 'index'
-        },
-        {
-          title: '课程时间',
-          align: 'center',
-          width:100,
-          key: 'classesTime',
-        },
-        {
-          title: '周一',
-          align: 'center',
-          key: 'monday'
-        },
-        {
-          title: '周二',
-          align: 'center',
-          key: 'tuesday',
-        },
-        {
-          title: '周三',
-          key: 'wednesday'
-        },
-        {
-          title: '周四',
-          align: 'center',
-          key: 'thursday',
-        },
-       {
-          title: '周五',
-          align: 'center',
-          key: 'friday'
-        },
-        {
-          title: '周六',
-          align: 'center',
-          key: 'saturday',
-        },
-        {
-          title: '周日',
-          align: 'center',
-          key: 'sunday',
-        }                
-      ],
-      scheduleData:[],
-      scheduleSelection: [],
       isExpandAll: null,
       actionUrl: '',
       userId: '',
@@ -206,7 +95,6 @@ export default {
       this.actionUrl = '/proxy/class/importClasses/' + item.classId
       this.submitSchedule(item)
     })
-    this.initTreeData()
   },
   methods: {
     // 打开新增列表弹框
@@ -215,7 +103,7 @@ export default {
       this.importModel = true
     },
     addSchedule () {
-      this.modalTitle = '新增班级'
+      this.modalTitle = '新增PDT'
       this.customerModel = true
       for (var i in this.formItem) {
         this.formItem[i] = ""
@@ -232,16 +120,6 @@ export default {
         }
         item.children != null && this.getUserId(item.children, schoolId)
       })
-    },
-    initTreeData (data) {
-      let params = data;
-      getTableData('/proxy/customer/listCustomerTree', params).then(res => {
-        this.formatTreeData(res.data)
-        this.isExpandAll = true
-        this.treeList = res.data
-      }).catch(err => {
-        console.log(err)
-      })      
     },
     formatTreeData (data) {
       data.forEach((item) => {
@@ -330,7 +208,7 @@ export default {
 </script>
 <style land="Less">
   .ivu-modal {
-    top: 0 ;
+    top: 200px ;
   }
   .treeBox {
     max-height: 100px;
