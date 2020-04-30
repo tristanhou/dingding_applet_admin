@@ -48,7 +48,7 @@ export default {
           key: 'projectName'
         },
         {
-          title: 'projectDesc',
+          title: '描述',
           align: 'center',
           key: 'projectDesc'
         },
@@ -60,17 +60,8 @@ export default {
         {
           title: '状态',
           align: 'center',
-          key: 'status'
-        },
-        {
-          title: '创建时间',
-          align: 'center',
-          key: 'pdtManagerId'
-        },
-        {
-          title: '更新时间',
-          align: 'center',
-          key: 'status'
+          key: 'status',
+          enum: [{ 0: '停用' }, { 1: '启用' }]
         },
         {
           title: "操作",

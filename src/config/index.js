@@ -18,7 +18,7 @@ export default {
    */
     baseUrl: {
         dev: '',
-        pro: 'https://www.easy-mock.com/mock/5bce871a98c3e07240b7e07e/jimilbs'
+        pro: ''
     },
     /**
    * @description 默认打开的首页的路由name值，默认为home

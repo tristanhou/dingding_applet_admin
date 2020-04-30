@@ -3,11 +3,11 @@
     <Button icon="md-add" @click="addSchedule">
       新增
     </Button>
-    <div style="float: right;width: 260px">
+    <!-- <div style="float: right;width: 260px">
       <Input search enter-button="搜索" placeholder="搜索pdt" @on-search="classSearch" v-model="searchModel"/>
-    </div>
+    </div> -->
     <Modal
-      :styles="{top: '20px'}"
+      :styles="{top: '200px'}"
       v-model="customerModel"
       v-bind:title= "modalTitle"
       @on-ok="ok"
@@ -51,7 +51,6 @@ export default {
   data () {
     return {
       customerModel: false,
-      importModel: false,
       modalTitle: null,
       url: '',
       formItem: {
@@ -75,11 +74,6 @@ export default {
           {pattern: /^1[34578]\d{9}$/, message: '手机号码输入错误', trigger: 'blur' }
         ],
       },
-      isExpandAll: null,
-      actionUrl: '',
-      userId: '',
-      classId: null,
-      schoolId: null,
       searchModel: ''
     }
   },
@@ -110,22 +104,6 @@ export default {
       }
       this.url = '/proxy/attendance/pdt/addPdt'
       this.$refs['formValidate'].resetFields()
-    },
-    getUserId (data, schoolId) {
-      data.forEach((item) => {
-        if (item.schoolId == schoolId) {
-          if (item.userId != null) {
-            this.userId = item.userId
-          }
-        }
-        item.children != null && this.getUserId(item.children, schoolId)
-      })
-    },
-    formatTreeData (data) {
-      data.forEach((item) => {
-        item.title = item.name
-        item.children != undefined && this.formatTreeData(item.children)
-      })
     },
     // 打开编辑列表弹框
     editSchedule(item) {
@@ -166,10 +144,7 @@ export default {
     },
     // 关闭列表数据弹框
     handleRemove () {
-      this.$refs['upload'].clearFiles()
       this.customerModel = false
-      this.scheduleModel = false
-      this.importModel = false
     },
     classSearch (value) {
       const keyword = value.replace(/(^\s*)|(\s*$)/g, "")

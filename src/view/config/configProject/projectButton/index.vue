@@ -3,9 +3,9 @@
     <Button icon="md-add" @click="addSchedule">
       新增
     </Button>
-    <div style="float: right;width: 260px">
+    <!-- <div style="float: right;width: 260px">
       <Input search enter-button="搜索" placeholder="搜索项目" @on-search="classSearch" v-model="searchModel"/>
-    </div>
+    </div> -->
     <Modal
       :styles="{top: '200px'}"
       v-model="customerModel"
@@ -16,14 +16,19 @@
       transfer
       :mask-closable="false">
         <Form :model="formItem" :label-width="100" :rules="ruleValidate" ref="formValidate">
+          <FormItem label="PDT" prop="className">
+            <Select v-model="formItem.pdtId"  :filterable="true" placeholder="PDT">
+              <Option v-for="item in pdtList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
           <FormItem label="项目名称" prop="className">
               <Input v-model="formItem.projectName" placeholder="项目名称"></Input>
           </FormItem>
-          <FormItem label="Desc" prop="classTeacher">
-            <Input v-model="formItem.projectDesc" placeholder="请输入projectDesc"></Input>
-          </FormItem>
           <FormItem label="项目经理" prop="teacherPhone">
             <Input v-model="formItem.projectManagerId" placeholder="请输入项目经理名称"></Input>
+          </FormItem>          
+          <FormItem label="描述" prop="classTeacher">
+            <Input v-model="formItem.projectDesc" placeholder="请输入projectDesc"></Input>
           </FormItem>
           <FormItem style="text-align: right;">
             <Button type="primary" @click="handleSubmit('add')">提交</Button>
@@ -52,10 +57,10 @@ export default {
   data () {
     return {
       customerModel: false,
-      importModel: false,
-      modalTitle: null,
-      url: '',
+      modalTitle: '', // 弹框标题
+      pdtList: [],
       formItem: {
+        pdtId: '',
         projectName: '',
         projectDesc: '',
         projectManagerId: '',
@@ -83,6 +88,7 @@ export default {
     }
   },
   mounted () {
+    this.getPdtList()
     bus.$on('setKeyword', (item) => {
       this.searchModel = ''
     })
@@ -163,6 +169,22 @@ export default {
       this.scheduleModel = false
       this.importModel = false
     },
+    // 获取 pdt 列表
+    getPdtList () {
+      getTableData ('/proxy/attendance/pdt/selPdt')
+        .then (res => {
+          debugger
+          const list = res.data.list;
+          let data = [];
+          list.forEach(element => {
+            data.push({value: element.id, label: element.pdtName})
+          });
+          this.pdtList = data;
+        })
+        .catch (err => {
+          console.log(err)
+        })
+    },
     classSearch (value) {
       const keyword = value.replace(/(^\s*)|(\s*$)/g, "")
       bus.$emit('initTableData', keyword)
@@ -187,14 +209,6 @@ export default {
         
       })
     },
-    uploadSuccess (response, file, fileList) {
-      if (response.code !== 0) {
-        this.$Message.warning(response.msg)
-        this.$refs['upload'].clearFiles()
-        return
-      }
-      this.$Message.success(response.msg)
-    }
   }
 }
 </script>
