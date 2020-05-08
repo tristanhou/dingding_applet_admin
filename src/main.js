@@ -16,6 +16,7 @@ import http from '@/api/http';
 import api from '@/api/api';
 import Cookies from 'js-cookie';
 import Utils from './libs/utils';
+import parse from 'url-parse';
 // import ElementUI from 'element-ui';
 // import 'element-ui/lib/theme-chalk/index.css';
 // 实际打包时应该不引入mock
@@ -42,6 +43,7 @@ Vue.prototype.$http = http;
 Vue.prototype.$api = api;
 Vue.prototype.$cookie = Cookies;
 Vue.prototype.$utils = Utils;
+Vue.prototype.$parse = parse;
 /**
  * 注册指令
  */

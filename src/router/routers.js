@@ -153,15 +153,15 @@ export default [
                 },
                 component: () => import('@/view/statistics/pdt/pdtReport.vue')
             },
-            // {
-            //     path: 'financeReport',
-            //     name: 'financeReport',
-            //     meta: {
-            //         icon: 'ios-infinite',
-            //         title: '财务统计表'
-            //     },
-            //     component: () => import('@/view/statistics/finance/financeReport.vue')
-            // },          
+            {
+                path: 'financeReport',
+                name: 'financeReport',
+                meta: {
+                    icon: 'ios-infinite',
+                    title: '财务统计表'
+                },
+                component: () => import('@/view/statistics/finance/financeReport.vue')
+            },          
         ]
     },
     // {

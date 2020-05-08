@@ -3,12 +3,19 @@ import qs from 'qs';
 
 export const getTableData = (url, data) => {
     return axios.request({
-      url: url,
-      method: 'get',
-      params: data
-    })
-  }
-
+        url: url,
+        method: 'get',
+        params: data
+    });
+};
+export const getExportData = (url, data) => {
+    return axios.request({
+        url: url,
+        method: 'get',
+        params: data,
+        responseType: 'blob'
+    });
+};
 export const getDragList = () => {
     return axios.request({
         url: 'get_drag_list',
@@ -24,11 +31,11 @@ export const errorReq = () => {
 };
 export const changeData = (url, data) => {
     return axios.request({
-      url: url,
-      method: 'post',
-      data: qs.stringify(data)
-    })
-}
+        url: url,
+        method: 'post',
+        data: qs.stringify(data)
+    });
+};
 
 export const saveErrorLogger = info => {
     return axios.request({
