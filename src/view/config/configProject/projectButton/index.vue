@@ -1,8 +1,11 @@
 <template>
   <section style="margin-bottom: 20px;position: relative;">
-    <Button icon="md-add" @click="addSchedule">
-      新增
-    </Button>
+      <Select v-model="queryParams.pdtId"  :filterable="true" placeholder="PDT" :clearable="true">
+        <Option v-for="item in pdtList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+      <Input v-model="queryParams.projectName" style="width:160px; marginRight:5px"  placeholder="项目名称" :clearable="true"/>
+      <Button icon="md-add" @click="addSchedule">搜索</Button>
+      <Button icon="md-add" @click="addSchedule">新增</Button>
     <!-- <div style="float: right;width: 260px">
       <Input search enter-button="搜索" placeholder="搜索项目" @on-search="classSearch" v-model="searchModel"/>
     </div> -->
@@ -16,19 +19,22 @@
       transfer
       :mask-closable="false">
         <Form :model="formItem" :label-width="100" :rules="ruleValidate" ref="formValidate">
-          <FormItem label="PDT" prop="className">
+          <FormItem label="PDT" prop="pdtId">
             <Select v-model="formItem.pdtId"  :filterable="true" placeholder="PDT">
               <Option v-for="item in pdtList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
-          <FormItem label="项目名称" prop="className">
+          <FormItem label="项目名称" prop="projectName">
               <Input v-model="formItem.projectName" placeholder="项目名称"></Input>
           </FormItem>
-          <FormItem label="项目经理" prop="teacherPhone">
-            <Input v-model="formItem.projectManagerId" placeholder="请输入项目经理名称"></Input>
+          <FormItem label="项目经理" prop="projectManagerId">
+            <Select v-model="formItem.projectManagerId" style="width:100%; marginRight:5px" :filterable="true" placeholder="项目经理名称" :clearable="true">
+              <Option v-for="item in projectManagerList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <!-- <Input v-model="formItem.projectManagerId" placeholder="请输入项目经理名称"></Input> -->
           </FormItem>          
-          <FormItem label="描述" prop="classTeacher">
-            <Input v-model="formItem.projectDesc" placeholder="请输入projectDesc"></Input>
+          <FormItem label="描述" prop="projectDesc">
+            <Input v-model="formItem.projectDesc" placeholder="请输入描述"></Input>
           </FormItem>
           <FormItem style="text-align: right;">
             <Button type="primary" @click="handleSubmit('add')">提交</Button>
@@ -58,6 +64,7 @@ export default {
     return {
       customerModel: false,
       modalTitle: '', // 弹框标题
+      projectManagerList: [], // 
       pdtList: [],
       formItem: {
         pdtId: '',
@@ -66,19 +73,21 @@ export default {
         projectManagerId: '',
       },
       ruleValidate: {
-        pdtName: [
-          {required: true, message: '请输入班级名称', trigger: 'blur'},
-          { type: 'string', max: 50, message: '班级名称不能超过50个字符', trigger: 'blur' },
+        pdtId: [
+          {required: true, message: '请选择PDT名称', trigger: 'change'},
+        ],
+        projectName: [
+          {required: true, message: '请输入项目名称', trigger: 'blur'},
+          {type: 'string', max: 50, message: '项目名称不能超过50个字符', trigger: 'blur' },
           {pattern: /^[\u4e00-\u9fa5\._a-zA-Z0-9]+$/, message: '请不要输入特殊字符', trigger: 'blur'}
         ],
-        pdtDesc: [
-          {required: true, message: '请输入班主任名称', trigger: 'blur'},
-          { type: 'string', max: 10, message: '班主任名称不能超过10个字符', trigger: 'blur' },
+        projectDesc: [
+          // {required: true, message: '请输入描述', trigger: 'blur'},
+          {type: 'string', max: 50, message: '项目不能超过50个字符', trigger: 'blur' },
           {pattern: /^[\u4e00-\u9fa5\._a-zA-Z0-9]+$/, message: '请不要输入特殊字符', trigger: 'blur'}
         ],
-        pdtManagerId: [
-          {required: true, message: '请输入班主任手机', trigger: 'blur'},
-          {pattern: /^1[34578]\d{9}$/, message: '手机号码输入错误', trigger: 'blur' }
+        projectManagerId: [
+          {required: true, message: '请选择项目经理', trigger: 'change'},
         ],
       },
       userId: '',
@@ -110,6 +119,7 @@ export default {
     addSchedule () {
       this.modalTitle = '新增项目'
       this.customerModel = true
+      this.getUserRoleList()
       for (var i in this.formItem) {
         this.formItem[i] = ""
       }
@@ -132,6 +142,7 @@ export default {
       this.customerModel = true
       this.modalTitle = '修改'
       this.formItem['id'] = item['id']
+      this.formItem['pdtId'] = item['pdtId']
       this.formItem['projectName'] = item['projectName']
       this.formItem['projectDesc'] = item['projectDesc']
       this.formItem['projectManagerId'] = item['projectManagerId']
@@ -184,6 +195,24 @@ export default {
         .catch (err => {
           console.log(err)
         })
+    },
+    /**
+     * 获取用户角色
+     * id=3 PDT经理 id=4 项目经理
+     */
+    getUserRoleList() {
+          getTableData('/proxy/attendance/user/selUserByRole', {id: 4})
+            .then (res => {
+              const list = res.data.list;
+              let data = [];
+              list.forEach(element => {
+                data.push({value: element.userCode, label: element.userName});
+              });
+              this.projectManagerList = data;
+            })
+            .catch (err => {
+              console.log(err);
+        });
     },
     classSearch (value) {
       const keyword = value.replace(/(^\s*)|(\s*$)/g, "")

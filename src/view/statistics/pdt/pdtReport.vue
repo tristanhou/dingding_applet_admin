@@ -249,7 +249,7 @@ export default {
                         const url = URL.createObjectURL(blob);
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', 'PDT统计表.xls');
+                        link.setAttribute('download', 'PDT统计表.xlsx');
                         link.click();
                         link.remove();
                     })

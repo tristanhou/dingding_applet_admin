@@ -151,10 +151,10 @@ export default {
                 console.log(err);
             });
         },
-        // 打开编辑弹框并传值
+        // 修改pdt
         editSchedule(item) {
-            debugger;
-            bus.$emit('editSchedule', item.row);
+            
+            bus.$emit('editPdt', item.row);
         },
         showModal () {
             this.modalVisible = true;

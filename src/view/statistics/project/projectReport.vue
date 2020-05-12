@@ -252,7 +252,7 @@ export default {
                         const url = URL.createObjectURL(blob);
                         const link = document.createElement('a');
                         link.href = url;
-                        link.setAttribute('download', '项目统计表.xls');
+                        link.setAttribute('download', '项目统计表.xlsx');
                         link.click();
                         link.remove();
                     })
