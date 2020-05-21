@@ -2,12 +2,12 @@
   <div>
     <Row :gutter="16">
       <Col span="24">
-        <Card style="height:84vh; overflow-y:auto">
-          <p slot="title">
+        <Card style="height:80vh; overflow-y:auto">
+          <!-- <p slot="title">
             <Icon type="android-contact"></Icon>
               财务统计表
-          </p>
-          <Row class="table-top" style="marginBottom: 11px;">
+          </p> -->
+          <Row>
             <div style="float: left;">
               <Input v-model="queryParams.dingTalkUserName"  style="width:160px; marginRight:5px"  placeholder="填写人名称" :clearable="true"/>
               <Input v-model="queryParams.jobNumber"  style="width:160px; marginRight:5px"  placeholder="工号" :clearable="true"/>
@@ -16,7 +16,7 @@
               <Button style="marginRight:5px" type="primary" @click="exportDatas()">导出<Icon type="ios-download-outline"></Icon></Button>
             </div>
           </Row> 
-          <Tables :columns="financeColumns" :totalPage="totalRecord" :show-total="false" @on-page-change="pageChange" :currentPage="currentPage" :data="financeData" v-model="financeData" ref="table" :height="600" @on-page-size-change="pageSizeChange">
+          <Tables :columns="financeColumns" :totalPage="totalRecord" :show-total="false" @on-page-change="pageChange" :currentPage="currentPage" :data="financeData" v-model="financeData" ref="table" :height="500" @on-page-size-change="pageSizeChange">
           </Tables>
         </Card>
       </Col>

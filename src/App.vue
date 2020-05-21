@@ -24,4 +24,14 @@ html,body{
 #app {
   .size;
 }
+@media screen and (max-width:900px){
+  html {
+    font-size: 12px
+  }
+}
+@media screen and (max-width:1080px){
+  html {
+    font-size: 14px
+  }
+}
 </style>

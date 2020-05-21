@@ -2,12 +2,12 @@
   <div>
     <Row :gutter="16">
       <Col span="24">
-        <Card style="height:84vh; overflow-y:auto">
-          <p slot="title">
+        <Card style="height:80vh; overflow-y:auto">
+          <!-- <p slot="title">
             <Icon type="android-contact"></Icon>
               项目汇总表
-          </p>
-          <Row class="table-top" style="marginBottom: 11px;">
+          </p> -->
+          <Row>
             <div style="float: left;">
               <Select v-model="queryParams.pdtId" style="width:160px; marginRight:5px" :filterable="true" placeholder="PDT" @on-change="pdtChange" :clearable="true">
                   <Option v-for="item in pdtList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -25,7 +25,7 @@
               <Button style="marginRight:5px" type="primary" @click="exportDatas()">导出<Icon type="ios-download-outline"></Icon></Button>
             </div>
           </Row> 
-          <Tables :columns="projectColumns" :totalPage="totalRecord" :show-total="false" @on-page-change="pageChange" :currentPage="currentPage" :data="projectData" v-model="projectData" ref="table" :height="600" @on-page-size-change="pageSizeChange">
+          <Tables :columns="projectColumns" :totalPage="totalRecord" :show-total="false" @on-page-change="pageChange" :currentPage="currentPage" :data="projectData" v-model="projectData" ref="table" :height="500" @on-page-size-change="pageSizeChange">
           </Tables>
         </Card>
       </Col>
@@ -38,7 +38,6 @@ import { getTableData, getExportData} from '@/api/data';
 
 export default {
     components: {
-  
         Tables
     },
     created () {},
@@ -51,6 +50,10 @@ export default {
     name: 'projectReport',
     data () {
         return {
+            page: {
+                pageNum: 1,
+                pageSize: 100,
+            },
             pageNum: 1,
             pageSize: 20,
             currentPage: 1, // 当前页
@@ -158,7 +161,7 @@ export default {
         },
         // 获取 pdt 列表
         getPdtList () {
-            getTableData ('/proxy/attendance/pdt/selPdt')
+            getTableData ('/proxy/attendance/pdt/selPdt', this.page)
                 .then (res => {
                     debugger;
                     const list = res.data.list;
@@ -174,7 +177,8 @@ export default {
         },
         // 获取项目列表
         getProjectList(id) {
-            getTableData ('/proxy/attendance/project/selProjectByPdtId', {pdtId: id})
+            const params = Object.assign(this.page, {pdtId: id})
+            getTableData ('/proxy/attendance/project/selProjectByPdtId', params)
                 .then (res => {
                     debugger;
                     const list = res.data.list;

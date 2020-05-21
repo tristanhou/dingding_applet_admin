@@ -2,13 +2,13 @@
   <div>
     <Row :gutter="16">
       <Col span="24">
-        <Card class="cardHight">
-          <p slot="title">
+        <Card style="height:80vh; overflow-y:auto">
+          <!-- <p slot="title">
             <Icon type="android-contact"></Icon>
               PDT 列表
-          </p>
+          </p> -->
           <ButtonBox :treeList="data6"></ButtonBox>
-          <Tables :columns="columns1" :data="pdtData" v-model="pdtData"  :height="600" @on-change="pageChange" @on-page-size-change="pageSizeChange" :totalPage="total" :currentPage="currentPage">
+          <Tables :columns="columns1" :data="pdtData" v-model="pdtData"  :height="500" @on-page-change="pageChange" @on-page-size-change="pageSizeChange" :totalPage="total" :currentPage="currentPage" style="overflow-y:auto">
           </Tables>
         </Card>
       </Col>
@@ -55,7 +55,7 @@ export default {
                 {
                     title: 'PDT经理',
                     align: 'center',
-                    key: 'pdtManagerId'
+                    key: 'pdtManagerName'
                 },
                 {
                     title: '状态',
